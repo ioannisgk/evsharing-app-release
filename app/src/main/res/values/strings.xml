@@ -1,3 +1,10 @@
 <resources>
-    <string name="app_name">EVsharing App</string>
+<string name="app_name">EVsharing App</string>
+
+    <string name="titleMainActivity">User login</string>
+    <string name="usernameMainActivity">Username</string>
+    <string name="passwordMainActivity">Password</string>
+    <string name="loginMainActivity">Login Now</string>
+    <string name="registerMainActivity">or click here to register</string>
+
 </resources>
