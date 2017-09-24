@@ -1,5 +1,7 @@
 package com.ioannisgk.evsharingapp;
 
+import java.util.Date;
+
 public class Global
 {
     // Global variables for app settings
@@ -12,5 +14,5 @@ public class Global
     static public String username = "";
     static public String name = "";
     static public String gender = "";
-    static public int age = 0;
+    static public Date dob;
 }

@@ -18,8 +18,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.util.Assert;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 public class SpringRestClient {
@@ -31,7 +29,7 @@ public class SpringRestClient {
 
     // Class constructor
     public SpringRestClient() {
-        System.out.println("OUT0: ");
+
     }
 
     // Prepare HTTP headers
@@ -64,15 +62,12 @@ public class SpringRestClient {
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
         HttpEntity<String> request = new HttpEntity<String>(getHeadersWithClientCredentials());
-
-        System.out.println("OUT3:1 ");
         ResponseEntity<Object> response = restTemplate.exchange(
                 AUTH_SERVER_URI + QPM_PASSWORD_GRANT,
                 HttpMethod.POST,
                 request,
                 Object.class);
 
-        System.out.println("OUT3:2 ");
         LinkedHashMap<String, Object> map = (LinkedHashMap<String, Object>)response.getBody();
         AuthTokenInfo tokenInfo = null;
 
@@ -84,7 +79,7 @@ public class SpringRestClient {
             tokenInfo.setRefresh_token((String)map.get("refresh_token"));
             tokenInfo.setExpires_in((int)map.get("expires_in"));
             tokenInfo.setScope((String)map.get("scope"));
-            System.out.println(tokenInfo);
+            // System.out.println(tokenInfo);
 
         } else {
             System.out.println("No user exist----------");
@@ -94,10 +89,9 @@ public class SpringRestClient {
 
     // Send a POST request to login a user
 
-    public User loginUser(AuthTokenInfo tokenInfo) {
+    public User loginUser(AuthTokenInfo tokenInfo, String theUsername, String thePassword) {
 
         Assert.notNull(tokenInfo, "Authenticate first please......");
-        System.out.println("\n2. Testing login API----------");
 
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
@@ -105,8 +99,10 @@ public class SpringRestClient {
         // Create the request body as a hash map to store the username and password
         LinkedHashMap<String, String> body = new LinkedHashMap<>();
 
-        body.put("username", "user111");
-        body.put("password", "pass111");
+        // Put username and password entered in the login form
+
+        body.put("username", theUsername);
+        body.put("password", thePassword);
 
         HttpEntity<Object> request = new HttpEntity<Object>(body, getHeaders());
         ResponseEntity<User> response = restTemplate.exchange(
@@ -115,10 +111,11 @@ public class SpringRestClient {
                 request,
                 User.class);
 
-        System.out.println(response.getBody());
+        // Return user object
 
-        return response.getBody();
-
+        if (response.getBody() != null) {
+            return response.getBody();
+        } else return new User("Invalid login details");
     }
 
     // Send a GET request to get list of all users
@@ -247,11 +244,6 @@ public class SpringRestClient {
                 REST_SERVICE_URI + "/user/4" + QPM_ACCESS_TOKEN + tokenInfo.getAccess_token(),
                 HttpMethod.DELETE,
                 request, User.class);
-    }
-
-    public User login() {
-        AuthTokenInfo tokenInfo = sendTokenRequest();
-        return loginUser(tokenInfo);
     }
 
     //public static void main(String args[]){

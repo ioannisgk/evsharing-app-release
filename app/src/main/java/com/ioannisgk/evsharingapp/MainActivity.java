@@ -5,29 +5,17 @@ import android.os.Bundle;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import com.ioannisgk.evsharingapp.entities.User;
 import com.ioannisgk.evsharingapp.utils.AuthTokenInfo;
 import com.ioannisgk.evsharingapp.utils.SpringRestClient;
 
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.client.RestTemplate;
-
-import java.util.Arrays;
-import java.util.LinkedHashMap;
+import org.json.JSONException;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -62,9 +50,16 @@ public class MainActivity extends AppCompatActivity {
                 final String username = loginUsername.getText().toString();
                 final String password = loginPassword.getText().toString();
 
-                new HttpRequestTask().execute();
+                if ((!username.isEmpty()) && (!password.isEmpty())) {
 
-                System.out.println("Button clicked");
+                    // Execute async task and pass username and password typed by the user
+                    new HttpRequestTask().execute(username, password);
+
+                } else {
+
+                    // Show error message
+                    showDialogBox("Login error", "Empty fields detected");
+                }
 
             }
         });
@@ -82,24 +77,76 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private class HttpRequestTask extends AsyncTask<Void, Void, User> {
+    private class HttpRequestTask extends AsyncTask<String, Void, User> {
         @Override
-        protected User doInBackground(Void... params) {
+        protected User doInBackground(String... params) {
 
-            System.out.println("OUT1: ");
-            SpringRestClient restClient = new SpringRestClient();
-            User theUser = restClient.login();
-            System.out.println("OUT1:1 ");
-            System.out.println("OUT2: " + theUser);
-            return theUser;
+            // Username and password entered in the login form
+
+            String username = params[0];
+            String password = params[1];
+
+            // Try to connect to server and use the web service
+
+            try {
+
+                // Create new SpringRestClient object
+                SpringRestClient restClient = new SpringRestClient();
+
+                // Get an access token which will be send with each request
+                AuthTokenInfo tokenInfo = restClient.sendTokenRequest();
+
+                // Login via web service and retrieve user object
+                User theUser = restClient.loginUser(tokenInfo, username, password);
+
+                return theUser;
+
+            } catch (RuntimeException e) {
+
+                e.printStackTrace();
+                return null;
+            }
         }
 
         @Override
         protected void onPostExecute(User theUser) {
 
-            System.out.println("OUT2: " + theUser);
-        }
+            if (theUser != null) {
+                if (theUser.getRequestStatus().equals("Success")) {
 
+                    //
+
+                    Global.username = theUser.getUsername();
+                    Global.name = theUser.getName();
+                    Global.gender = theUser.getGender();
+                    Global.dob = theUser.getDob();
+
+                    // Start ProfileActivity and kill MainLoginActivity
+
+                    //Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                    //MainActivity.this.startActivity(intent);
+                    //finish();
+
+                    System.out.println(Global.username);
+                    System.out.println(Global.name);
+                    System.out.println(Global.gender);
+                    System.out.println(Global.dob);
+
+                } else if (theUser.getRequestStatus().equals("Invalid login details")) {
+                    showDialogBox("Login error", "Invalid login details");
+                }
+
+            } else {
+                showDialogBox("Server error", "Could not connect to server");
+            }
+        }
+    }
+
+    // Show dialogue box message
+
+    private void showDialogBox(String title, String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle(title).setMessage(message).setNegativeButton("Retry", null).create().show();
     }
 
     // Main menu dropdown
