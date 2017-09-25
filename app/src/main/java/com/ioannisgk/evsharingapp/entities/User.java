@@ -1,8 +1,9 @@
 package com.ioannisgk.evsharingapp.entities;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class User {
+public class User implements Serializable {
 
     // Class attributes mapped to table columns in database
 

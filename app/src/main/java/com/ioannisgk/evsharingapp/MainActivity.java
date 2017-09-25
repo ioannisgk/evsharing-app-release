@@ -2,7 +2,6 @@ package com.ioannisgk.evsharingapp;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -13,10 +12,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import com.ioannisgk.evsharingapp.entities.User;
 import com.ioannisgk.evsharingapp.utils.AuthTokenInfo;
+import com.ioannisgk.evsharingapp.utils.Settings;
 import com.ioannisgk.evsharingapp.utils.SpringRestClient;
-
-import org.json.JSONException;
-
 
 public class MainActivity extends AppCompatActivity {
 
@@ -56,9 +53,7 @@ public class MainActivity extends AppCompatActivity {
                     new HttpRequestTask().execute(username, password);
 
                 } else {
-
-                    // Show error message
-                    showDialogBox("Login error", "Empty fields detected");
+                    Settings.showDialogBox("Login error", "Empty fields detected", MainActivity.this);
                 }
 
             }
@@ -114,39 +109,23 @@ public class MainActivity extends AppCompatActivity {
             if (theUser != null) {
                 if (theUser.getRequestStatus().equals("Success")) {
 
-                    //
+                    // Start ProfileActivity and pass the user object
 
-                    Global.username = theUser.getUsername();
-                    Global.name = theUser.getName();
-                    Global.gender = theUser.getGender();
-                    Global.dob = theUser.getDob();
+                    Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                    intent.putExtra("currentUser", theUser);
+                    MainActivity.this.startActivity(intent);
 
-                    // Start ProfileActivity and kill MainLoginActivity
-
-                    //Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
-                    //MainActivity.this.startActivity(intent);
-                    //finish();
-
-                    System.out.println(Global.username);
-                    System.out.println(Global.name);
-                    System.out.println(Global.gender);
-                    System.out.println(Global.dob);
+                    // Kill MainActivity
+                    finish();
 
                 } else if (theUser.getRequestStatus().equals("Invalid login details")) {
-                    showDialogBox("Login error", "Invalid login details");
+                    Settings.showDialogBox("Login error", "Invalid login details", MainActivity.this);
                 }
 
             } else {
-                showDialogBox("Server error", "Could not connect to server");
+                Settings.showDialogBox("Server error", "Could not connect to server", MainActivity.this);
             }
         }
-    }
-
-    // Show dialogue box message
-
-    private void showDialogBox(String title, String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        builder.setTitle(title).setMessage(message).setNegativeButton("Retry", null).create().show();
     }
 
     // Main menu dropdown

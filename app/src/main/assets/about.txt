@@ -1,0 +1,5 @@
+Developer name: Ioannis Gkourtzounis
+
+This application is part of the Dissertation Project.
+
+Thank you for using this app.
