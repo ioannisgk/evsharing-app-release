@@ -55,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     Settings.showDialogBox("Login error", "Empty fields detected", MainActivity.this);
                 }
-
             }
         });
 

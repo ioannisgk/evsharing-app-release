@@ -1,6 +1,8 @@
 package com.ioannisgk.evsharingapp;
 
 import android.content.Intent;
+import android.icu.text.DateFormat;
+import android.icu.text.SimpleDateFormat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -12,11 +14,13 @@ import android.widget.TextView;
 
 import com.ioannisgk.evsharingapp.entities.User;
 
+import java.util.Locale;
+
 public class ProfileActivity extends AppCompatActivity {
     TextView profileMessage;
     EditText profileName;
     EditText profileGender;
-    EditText profileAge;
+    EditText profileDate;
     Button request;
     Button history;
 
@@ -30,12 +34,17 @@ public class ProfileActivity extends AppCompatActivity {
         profileMessage = (TextView) findViewById(R.id.titleTextView);
         profileName = (EditText) findViewById(R.id.nameEditText);
         profileGender = (EditText) findViewById(R.id.genderEditText);
-        profileAge = (EditText) findViewById(R.id.dobEditText);
+        profileDate = (EditText) findViewById(R.id.dobEditText);
         request = (Button) findViewById(R.id.requestButton);
         history = (Button) findViewById(R.id.historyButton);
 
         // Get the current user object from the previous intent
         User theUser = (User) getIntent().getSerializableExtra("currentUser");
+
+        // Format date
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        String myDate = dateFormat.format(theUser.getDob());
 
         // Display user details
 
@@ -43,13 +52,13 @@ public class ProfileActivity extends AppCompatActivity {
         profileMessage.setText(message);
         profileName.setText(theUser.getName());
         profileGender.setText(theUser.getGender());
-        //profileAge.setText(theUser.getDob());
+        profileDate.setText(myDate);
 
         // Make profile fields inactive and not editable
 
         profileName.setKeyListener(null);
         profileGender.setKeyListener(null);
-        profileAge.setKeyListener(null);
+        profileDate.setKeyListener(null);
 
         // Start RequestActivity when clicking on request button
 

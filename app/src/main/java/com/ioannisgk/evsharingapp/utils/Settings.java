@@ -13,4 +13,9 @@ public class Settings {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(title).setMessage(message).setNegativeButton("Retry", null).create().show();
     }
+
+    public static void showDialogBoxSuccess(String title, String message, Context context) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(title).setMessage(message).setPositiveButton("OK", null).create().show();
+    }
 }

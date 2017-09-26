@@ -79,7 +79,6 @@ public class SpringRestClient {
             tokenInfo.setRefresh_token((String)map.get("refresh_token"));
             tokenInfo.setExpires_in((int)map.get("expires_in"));
             tokenInfo.setScope((String)map.get("scope"));
-            // System.out.println(tokenInfo);
 
         } else {
             System.out.println("No user exist----------");
@@ -91,16 +90,12 @@ public class SpringRestClient {
 
     public User loginUser(AuthTokenInfo tokenInfo, String theUsername, String thePassword) {
 
-        Assert.notNull(tokenInfo, "Authenticate first please......");
-
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
         // Create the request body as a hash map to store the username and password
+
         LinkedHashMap<String, String> body = new LinkedHashMap<>();
-
-        // Put username and password entered in the login form
-
         body.put("username", theUsername);
         body.put("password", thePassword);
 
@@ -116,41 +111,6 @@ public class SpringRestClient {
         if (response.getBody() != null) {
             return response.getBody();
         } else return new User("Invalid login details");
-    }
-
-    // Send a GET request to get list of all users
-
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    private static void listAllUsers(AuthTokenInfo tokenInfo){
-
-        Assert.notNull(tokenInfo, "Authenticate first please......");
-        System.out.println("\n1. Testing listAllUsers API-----------");
-
-        RestTemplate restTemplate = new RestTemplate();
-
-        HttpEntity<String> request = new HttpEntity<String>(getHeaders());
-        ResponseEntity<List> response = restTemplate.exchange(
-                REST_SERVICE_URI + "/users/" + QPM_ACCESS_TOKEN + tokenInfo.getAccess_token(),
-                HttpMethod.GET,
-                request,
-                List.class);
-
-        List<LinkedHashMap<String, Object>> usersMap = (List<LinkedHashMap<String, Object>>) response.getBody();
-
-        if(usersMap != null){
-
-            for(LinkedHashMap<String, Object> map : usersMap){
-                System.out.println("User : id = " + map.get("id") +
-                        ", Name = " + map.get("name") +
-                        ", Username = " + map.get("username") +
-                        ", Password = " + map.get("password") +
-                        ", Gender = " + map.get("gender") +
-                        ", Date of Birth = " + map.get("dob"));
-            }
-
-        } else {
-            System.out.println("No user exist----------");
-        }
     }
 
     // Send a GET request to get a specific user
@@ -175,22 +135,10 @@ public class SpringRestClient {
 
     // Send a POST request to create a new user
 
-    private static void createUser(AuthTokenInfo tokenInfo) {
-
-        Assert.notNull(tokenInfo, "Authenticate first please......");
-        System.out.println("\n3. Testing create User API----------");
+    public boolean createUser(AuthTokenInfo tokenInfo, User theUser) {
 
         RestTemplate restTemplate = new RestTemplate();
-
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-        Date currentDob = null;
-        try {
-            currentDob = format.parse("02/02/1880");
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        User theUser = new User("usernameTest3677.", "passwordTest36.", "Name Surname", "MALE", currentDob);
+        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
         HttpEntity<Object> request = new HttpEntity<Object>(theUser, getHeaders());
         URI uri = restTemplate.postForLocation(
@@ -198,7 +146,11 @@ public class SpringRestClient {
                 request,
                 User.class);
 
-        System.out.println("Location : " + uri.toASCIIString());
+        // Check if uri length is valid (>= 54 means it contains an id) and return true or false
+
+        if (uri.toASCIIString().length() >= 54) {
+            return true;
+        } else return false;
     }
 
     // Send a PUT request to update an existing user
@@ -206,7 +158,6 @@ public class SpringRestClient {
     private static void updateUser(AuthTokenInfo tokenInfo) {
 
         Assert.notNull(tokenInfo, "Authenticate first please......");
-        System.out.println("\n4. Testing update User API----------");
 
         RestTemplate restTemplate = new RestTemplate();
 

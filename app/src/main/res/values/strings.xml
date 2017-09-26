@@ -1,15 +1,13 @@
 <resources>
     <string name="app_name">EVsharing App</string>
-
     <string name="action_settings">Main Menu</string>
+    <string name="titleAboutActivity">About us</string>
 
     <string name="titleMainActivity">User login</string>
     <string name="usernameMainActivity">Username</string>
     <string name="passwordMainActivity">Password</string>
     <string name="loginMainActivity">Login Now</string>
     <string name="registerMainActivity">or click here to register</string>
-
-    <string name="titleAboutActivity">About us</string>
 
     <string name="titleProfileActivity">Welcome back</string>
     <string name="nameProfileActivity">Name</string>
@@ -18,5 +16,14 @@
     <string name="infoProfileActivity">Main actions</string>
     <string name="requestProfileActivity">Request Vehicle</string>
     <string name="historyProfileActivity">User History</string>
+
+    <string name="titleRegistrationActivity">User registration</string>
+    <string name="nameRegistrationActivity">Full name</string>
+    <string name="genderRegistrationActivity">Select gender</string>
+    <string name="dobRegistrationActivity">Date of birth</string>
+    <string name="usernameRegistrationActivity">Username [ email ]</string>
+    <string name="passwordRegistrationActivity">Password</string>
+    <string name="termsRegistrationActivity">By registering you agree to terms and conditions</string>
+    <string name="registerRegistrationActivity">Register</string>
 
 </resources>
