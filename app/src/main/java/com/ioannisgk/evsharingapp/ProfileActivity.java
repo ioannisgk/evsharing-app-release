@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.ioannisgk.evsharingapp.entities.User;
@@ -23,6 +24,8 @@ public class ProfileActivity extends AppCompatActivity {
     EditText profileDate;
     Button request;
     Button history;
+    Button edit;
+    Switch switch1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +40,8 @@ public class ProfileActivity extends AppCompatActivity {
         profileDate = (EditText) findViewById(R.id.dobEditText);
         request = (Button) findViewById(R.id.requestButton);
         history = (Button) findViewById(R.id.historyButton);
+        edit = (Button) findViewById(R.id.editButton);
+        switch1 = (Switch) findViewById(R.id.switch1);
 
         // Get the current user object from the previous intent
         User theUser = (User) getIntent().getSerializableExtra("currentUser");

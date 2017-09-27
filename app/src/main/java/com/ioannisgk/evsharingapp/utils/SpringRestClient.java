@@ -22,8 +22,8 @@ import org.springframework.web.client.RestTemplate;
 
 public class SpringRestClient {
 
-    public static final String REST_SERVICE_URI = "http://138.68.159.75:8080/evsharing-platform/api";
-    public static final String AUTH_SERVER_URI = "http://138.68.159.75:8080/evsharing-platform/oauth/token";
+    public static final String REST_SERVICE_URI = "http://46.101.45.127:8080/evsharing-platform/api";
+    public static final String AUTH_SERVER_URI = "http://46.101.45.127:8080/evsharing-platform/oauth/token";
     public static final String QPM_PASSWORD_GRANT = "?grant_type=password&username=evsharingUser&password=evsharingPass";
     public static final String QPM_ACCESS_TOKEN = "?access_token=";
 
