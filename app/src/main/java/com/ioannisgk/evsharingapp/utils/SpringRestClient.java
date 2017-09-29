@@ -18,12 +18,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.util.Assert;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 public class SpringRestClient {
 
-    public static final String REST_SERVICE_URI = "http://46.101.45.127:8080/evsharing-platform/api";
-    public static final String AUTH_SERVER_URI = "http://46.101.45.127:8080/evsharing-platform/oauth/token";
+    public static final String REST_SERVICE_URI = "http://178.62.121.237:8080/evsharing-platform/api";
+    public static final String AUTH_SERVER_URI = "http://178.62.121.237:8080/evsharing-platform/oauth/token";
     public static final String QPM_PASSWORD_GRANT = "?grant_type=password&username=evsharingUser&password=evsharingPass";
     public static final String QPM_ACCESS_TOKEN = "?access_token=";
 
@@ -136,19 +137,28 @@ public class SpringRestClient {
     // Send a POST request to create a new user
 
     public boolean createUser(AuthTokenInfo tokenInfo, User theUser) {
+        URI uri = null;
 
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
         HttpEntity<Object> request = new HttpEntity<Object>(theUser, getHeaders());
-        URI uri = restTemplate.postForLocation(
-                REST_SERVICE_URI + "/user/" + QPM_ACCESS_TOKEN + tokenInfo.getAccess_token(),
-                request,
-                User.class);
 
-        // Check if uri length is valid (>= 54 means it contains an id) and return true or false
+        try {
+            uri = restTemplate.postForLocation(
+                    REST_SERVICE_URI + "/user/" + QPM_ACCESS_TOKEN + tokenInfo.getAccess_token(),
+                    request,
+                    User.class);
 
-        if (uri.toASCIIString().length() >= 54) {
+        // Catch exception and return false in case the username is already taken
+
+        } catch (HttpClientErrorException e) {
+            return false;
+        }
+
+        // Check if uri length is valid and return true or false
+
+        if (uri.toASCIIString().length() > (REST_SERVICE_URI + "/user/").length()) {
             return true;
         } else return false;
     }

@@ -16,8 +16,8 @@
     <string name="infoProfileActivity">Main actions</string>
     <string name="requestProfileActivity">Request Vehicle</string>
     <string name="historyProfileActivity">User History</string>
-    <string name="switchProfileActivity">Switch to edit</string>
-    <string name="editProfileActivity">Edit Profile</string>
+    <string name="switchProfileActivity">Enable edit mode</string>
+    <string name="saveProfileActivity">Save Profile</string>
 
     <string name="titleRegistrationActivity">User registration</string>
     <string name="nameRegistrationActivity">Full name</string>

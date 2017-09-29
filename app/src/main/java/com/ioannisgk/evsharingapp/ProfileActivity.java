@@ -24,7 +24,7 @@ public class ProfileActivity extends AppCompatActivity {
     EditText profileDate;
     Button request;
     Button history;
-    Button edit;
+    Button save;
     Switch switch1;
 
     @Override
@@ -40,7 +40,7 @@ public class ProfileActivity extends AppCompatActivity {
         profileDate = (EditText) findViewById(R.id.dobEditText);
         request = (Button) findViewById(R.id.requestButton);
         history = (Button) findViewById(R.id.historyButton);
-        edit = (Button) findViewById(R.id.editButton);
+        save = (Button) findViewById(R.id.saveButton);
         switch1 = (Switch) findViewById(R.id.switch1);
 
         // Get the current user object from the previous intent

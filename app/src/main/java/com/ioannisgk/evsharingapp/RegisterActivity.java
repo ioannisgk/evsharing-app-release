@@ -1,6 +1,5 @@
 package com.ioannisgk.evsharingapp;
 
-import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.icu.text.SimpleDateFormat;
@@ -21,10 +20,10 @@ import com.ioannisgk.evsharingapp.utils.AuthTokenInfo;
 import com.ioannisgk.evsharingapp.utils.DateDialog;
 import com.ioannisgk.evsharingapp.utils.Settings;
 import com.ioannisgk.evsharingapp.utils.SpringRestClient;
+import com.ioannisgk.evsharingapp.utils.myTextEncryptor;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import org.jasypt.util.text.StrongTextEncryptor;
+import org.jasypt.util.text.BasicTextEncryptor;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
@@ -72,23 +71,28 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
                 final String username = regUsername.getText().toString();
                 final String password = regPassword.getText().toString();
 
-                // Format date
-
-                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-                Date myDate = null;
-                try {
-                    myDate = dateFormat.parse(date);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-
-                // Create current user object from the data entered in the registration form
-                User currentUser = new User(username, password, name, gender, myDate);
-
                 // Validate input data from the registration form
-                boolean dataIsValid = validate(name, username, password);
+                boolean dataIsValid = validate(name, username, password, date);
 
                 if (dataIsValid == true) {
+
+                    // Format date
+
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                    Date myDate = null;
+                    try {
+                        myDate = dateFormat.parse(date);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
+                    // Encrypt current password with strong text encryptor
+
+                    myTextEncryptor textEncryptor = new myTextEncryptor();
+                    String encryptedPassword = textEncryptor.encryptPassword(password);
+
+                    // Create current user object from the data entered in the registration form
+                    User currentUser = new User(username, encryptedPassword, name, gender, myDate);
 
                     // Execute async task and pass current user object
                     new RegisterActivity.HttpRequestTask().execute(currentUser);
@@ -141,7 +145,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
                     RegisterActivity.this.startActivity(intent);
 
                 } else if (registered == false) {
-                    Settings.showDialogBox("Register error", "Could not complete registration", RegisterActivity.this);
+                    Settings.showDialogBox("Register error", "Could not complete registration (email already registered?)", RegisterActivity.this);
                 }
 
             } else {
@@ -152,7 +156,13 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
 
     // Validate input data from the registration form
 
-    private boolean validate(String theName, String theUsername, String thePassword) {
+    private boolean validate(String theName, String theUsername, String thePassword, String theDate) {
+
+        // Extract year string and convert it to int variable
+
+        String theYear = theDate.substring(theDate.length() - 4);
+        int year = Integer.parseInt(theYear);
+        int currentYear = Calendar.getInstance().get(Calendar.YEAR);
 
         if ((theName.isEmpty()) || (theUsername.isEmpty()) || (thePassword.isEmpty())) {
 
@@ -167,6 +177,11 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
         } else if ((theUsername.length() > 45) || (thePassword.length() > 45)) {
 
             Settings.showDialogBox("Register error", "Maximum number of chars is 45", RegisterActivity.this);
+            return false;
+
+        } else if (((currentYear - year) <= 18) || ((currentYear - year) >100)) {
+
+            Settings.showDialogBox("Register error", "You must be 19-100 years old to use this service", RegisterActivity.this);
             return false;
 
         } else {
