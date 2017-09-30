@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import com.ioannisgk.evsharingapp.entities.User;
 import com.ioannisgk.evsharingapp.utils.AuthTokenInfo;
+import com.ioannisgk.evsharingapp.utils.MyTextEncryptor;
 import com.ioannisgk.evsharingapp.utils.Settings;
 import com.ioannisgk.evsharingapp.utils.SpringRestClient;
 
@@ -49,8 +50,13 @@ public class MainActivity extends AppCompatActivity {
 
                 if ((!username.isEmpty()) && (!password.isEmpty())) {
 
+                    // Encrypt current password with text encryptor
+
+                    MyTextEncryptor textEncryptor = new MyTextEncryptor();
+                    String encryptedPassword = textEncryptor.encryptPassword(password);
+
                     // Execute async task and pass username and password typed by the user
-                    new HttpRequestTask().execute(username, password);
+                    new HttpRequestTask().execute(username, encryptedPassword);
 
                 } else {
                     Settings.showDialogBox("Login error", "Empty fields detected", MainActivity.this);

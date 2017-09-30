@@ -4,13 +4,13 @@ import org.jasypt.util.text.BasicTextEncryptor;
 
 // We use jasypt for encryption/decryption of user passwords
 
-public class myTextEncryptor {
+public class MyTextEncryptor {
 
     // Class attribute
     private BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
 
     // Class constructor
-    public myTextEncryptor() {
+    public MyTextEncryptor() {
         textEncryptor.setPassword("evsharingPassEncryptor");
     }
 

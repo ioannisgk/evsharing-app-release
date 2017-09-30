@@ -20,10 +20,8 @@ import com.ioannisgk.evsharingapp.utils.AuthTokenInfo;
 import com.ioannisgk.evsharingapp.utils.DateDialog;
 import com.ioannisgk.evsharingapp.utils.Settings;
 import com.ioannisgk.evsharingapp.utils.SpringRestClient;
-import com.ioannisgk.evsharingapp.utils.myTextEncryptor;
+import com.ioannisgk.evsharingapp.utils.MyTextEncryptor;
 
-import org.jasypt.util.text.StrongTextEncryptor;
-import org.jasypt.util.text.BasicTextEncryptor;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
@@ -72,7 +70,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
                 final String password = regPassword.getText().toString();
 
                 // Validate input data from the registration form
-                boolean dataIsValid = validate(name, username, password, date);
+                boolean dataIsValid = Settings.validate(name, username, password, date, RegisterActivity.this);
 
                 if (dataIsValid == true) {
 
@@ -86,9 +84,9 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
                         e.printStackTrace();
                     }
 
-                    // Encrypt current password with strong text encryptor
+                    // Encrypt current password with text encryptor
 
-                    myTextEncryptor textEncryptor = new myTextEncryptor();
+                    MyTextEncryptor textEncryptor = new MyTextEncryptor();
                     String encryptedPassword = textEncryptor.encryptPassword(password);
 
                     // Create current user object from the data entered in the registration form
@@ -152,52 +150,6 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
                 Settings.showDialogBox("Server error", "Could not connect to server", RegisterActivity.this);
             }
         }
-    }
-
-    // Validate input data from the registration form
-
-    private boolean validate(String theName, String theUsername, String thePassword, String theDate) {
-
-        // Extract year string and convert it to int variable
-
-        String theYear = theDate.substring(theDate.length() - 4);
-        int year = Integer.parseInt(theYear);
-        int currentYear = Calendar.getInstance().get(Calendar.YEAR);
-
-        if ((theName.isEmpty()) || (theUsername.isEmpty()) || (thePassword.isEmpty())) {
-
-            Settings.showDialogBox("Register error", "Empty fields detected", RegisterActivity.this);
-            return false;
-
-        } else if ((theName.length() < 6) || (theUsername.length() < 6) || (thePassword.length() < 6)) {
-
-            Settings.showDialogBox("Register error", "Minimum number of chars is 6", RegisterActivity.this);
-            return false;
-
-        } else if ((theUsername.length() > 45) || (thePassword.length() > 45)) {
-
-            Settings.showDialogBox("Register error", "Maximum number of chars is 45", RegisterActivity.this);
-            return false;
-
-        } else if (((currentYear - year) <= 18) || ((currentYear - year) >100)) {
-
-            Settings.showDialogBox("Register error", "You must be 19-100 years old to use this service", RegisterActivity.this);
-            return false;
-
-        } else {
-
-            // Use regex to check if the username is a valid email
-
-            Pattern pattern = Pattern.compile("[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}");
-            Matcher mat = pattern.matcher(theUsername);
-
-            if (!mat.matches()) {
-
-                Settings.showDialogBox("Register error", "Username is not a valid email", RegisterActivity.this);
-                return false;
-            }
-        }
-        return true;
     }
 
     // Create new date dialogue object and show the selected date in the text box

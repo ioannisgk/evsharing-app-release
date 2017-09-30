@@ -14,6 +14,7 @@ import java.util.List;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -100,6 +101,8 @@ public class SpringRestClient {
         body.put("username", theUsername);
         body.put("password", thePassword);
 
+        System.out.println("OUT: " + thePassword);
+
         HttpEntity<Object> request = new HttpEntity<Object>(body, getHeaders());
         ResponseEntity<User> response = restTemplate.exchange(
                 REST_SERVICE_URI + "/login/" + QPM_ACCESS_TOKEN + tokenInfo.getAccess_token(),
@@ -136,7 +139,7 @@ public class SpringRestClient {
 
     // Send a POST request to create a new user
 
-    public boolean createUser(AuthTokenInfo tokenInfo, User theUser) {
+    public Boolean createUser(AuthTokenInfo tokenInfo, User theUser) {
         URI uri = null;
 
         RestTemplate restTemplate = new RestTemplate();
@@ -153,7 +156,13 @@ public class SpringRestClient {
         // Catch exception and return false in case the username is already taken
 
         } catch (HttpClientErrorException e) {
-            return false;
+
+            if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
+                return null;
+
+            } else if (e.getStatusCode() == HttpStatus.CONFLICT) {
+                return false;
+            }
         }
 
         // Check if uri length is valid and return true or false
