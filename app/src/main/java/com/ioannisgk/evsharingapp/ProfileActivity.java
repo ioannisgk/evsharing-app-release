@@ -109,6 +109,7 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
             // read name, gender, date
             // validate data
             // pass new user object in async task to change data using rest
+                //
 
             }
         });
