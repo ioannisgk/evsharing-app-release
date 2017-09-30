@@ -1,31 +1,43 @@
 package com.ioannisgk.evsharingapp;
 
+import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.icu.text.DateFormat;
 import android.icu.text.SimpleDateFormat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ioannisgk.evsharingapp.entities.User;
+import com.ioannisgk.evsharingapp.utils.DateDialog;
 
 import java.util.Locale;
 
-public class ProfileActivity extends AppCompatActivity {
+import static android.R.attr.type;
+
+public class ProfileActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     TextView profileMessage;
     EditText profileName;
-    EditText profileGender;
     EditText profileDate;
     Button request;
     Button history;
-    Button save;
+    Button saveProfile;
     Switch switch1;
+    Spinner genderSpinner;
+    String gender;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,15 +48,25 @@ public class ProfileActivity extends AppCompatActivity {
 
         profileMessage = (TextView) findViewById(R.id.titleTextView);
         profileName = (EditText) findViewById(R.id.nameEditText);
-        profileGender = (EditText) findViewById(R.id.genderEditText);
         profileDate = (EditText) findViewById(R.id.dobEditText);
         request = (Button) findViewById(R.id.requestButton);
         history = (Button) findViewById(R.id.historyButton);
-        save = (Button) findViewById(R.id.saveButton);
+        saveProfile = (Button) findViewById(R.id.saveButton);
         switch1 = (Switch) findViewById(R.id.switch1);
+        genderSpinner = (Spinner) findViewById(R.id.genderSpinner);
+
+        // Set values for genderSpinner options from gender_array
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.gender_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        genderSpinner.setAdapter(adapter);
+        genderSpinner.setOnItemSelectedListener(this);
 
         // Get the current user object from the previous intent
         User theUser = (User) getIntent().getSerializableExtra("currentUser");
+
+        //
+        if (theUser.getGender().equals("Female")) genderSpinner.setSelection(1);
 
         // Format date
 
@@ -56,14 +78,10 @@ public class ProfileActivity extends AppCompatActivity {
         String message = "Welcome back " + theUser.getUsername();
         profileMessage.setText(message);
         profileName.setText(theUser.getName());
-        profileGender.setText(theUser.getGender());
         profileDate.setText(myDate);
 
         // Make profile fields inactive and not editable
-
-        profileName.setKeyListener(null);
-        profileGender.setKeyListener(null);
-        profileDate.setKeyListener(null);
+        alterProfileControls(false);
 
         // Start RequestActivity when clicking on request button
 
@@ -82,6 +100,112 @@ public class ProfileActivity extends AppCompatActivity {
                 startActivity(i2);
             }
         });
+
+        //
+
+        saveProfile.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+            // read name, gender, date
+            // validate data
+            // pass new user object in async task to change data using rest
+
+            }
+        });
+
+        switch1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                // check current state of a switch
+                Boolean switchState = switch1.isChecked();
+
+                if (switchState == true) {
+
+                    switch1.setText("Edit mode enabled");
+                    alterProfileControls(true);
+
+                } else if (switchState == false) {
+
+                    switch1.setText("Edit mode disabled");
+                    alterProfileControls(false);
+                }
+
+                Toast.makeText(getApplicationContext(), "Switch1 :" + switchState , Toast.LENGTH_LONG).show();
+            }
+
+        });
+    }
+
+    // Create new date dialogue object and show the selected date in the text box
+
+    public void onStart(){
+        super.onStart();
+        profileDate.setOnFocusChangeListener(new View.OnFocusChangeListener(){
+            public void onFocusChange(View view, boolean hasfocus){
+                if (hasfocus) {
+                    DateDialog dialog = new DateDialog(view);
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    dialog.show(ft, "DatePicker");
+                }
+            }
+        });
+    }
+
+    // Method to populate gender options
+
+    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+        switch (pos) {
+            case 0:
+                gender = "Male";
+                break;
+            case 1:
+                gender = "Female";
+                break;
+        }
+    }
+
+    // Method needed for dropdown list
+
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
+    // Method to alter status of profile fields
+
+    private void alterProfileControls(boolean status) {
+
+        profileName.setClickable(status);
+        profileName.setFocusable(status);
+        profileName.setFocusableInTouchMode(status);
+
+        profileDate.setClickable(status);
+        profileDate.setFocusable(status);
+        profileDate.setFocusableInTouchMode(status);
+
+        // Disable dropdown menu from spinner
+
+        if (status == false) {
+            genderSpinner.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    return true;
+                }
+            });
+
+        // Enable dropdown menu from spinner
+
+        } else if (status == true) {
+            genderSpinner.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    return false;
+                }
+            });
+        }
+
+        saveProfile.setEnabled(status);
     }
 
     // Main menu dropdown

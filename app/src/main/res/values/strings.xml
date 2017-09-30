@@ -9,16 +9,6 @@
     <string name="loginMainActivity">Login Now</string>
     <string name="registerMainActivity">or click here to register</string>
 
-    <string name="titleProfileActivity">Welcome back</string>
-    <string name="nameProfileActivity">Name</string>
-    <string name="genderProfileActivity">Gender</string>
-    <string name="dobProfileActivity">Date of Birth</string>
-    <string name="infoProfileActivity">Main actions</string>
-    <string name="requestProfileActivity">Request Vehicle</string>
-    <string name="historyProfileActivity">User History</string>
-    <string name="switchProfileActivity">Enable edit mode</string>
-    <string name="saveProfileActivity">Save Profile</string>
-
     <string name="titleRegistrationActivity">User registration</string>
     <string name="nameRegistrationActivity">Full name</string>
     <string name="genderRegistrationActivity">Select gender</string>
@@ -27,5 +17,15 @@
     <string name="passwordRegistrationActivity">Password</string>
     <string name="termsRegistrationActivity">By registering you agree to terms and conditions</string>
     <string name="registerRegistrationActivity">Register</string>
+
+    <string name="titleProfileActivity">Welcome back</string>
+    <string name="nameProfileActivity">Name</string>
+    <string name="genderProfileActivity">Gender</string>
+    <string name="dobProfileActivity">Date of Birth</string>
+    <string name="infoProfileActivity">Main actions</string>
+    <string name="requestProfileActivity">Request Vehicle</string>
+    <string name="historyProfileActivity">User History</string>
+    <string name="saveProfileActivity">Save Profile</string>
+    <string name="switchProfileActivity">Edit mode disabled</string>
 
 </resources>

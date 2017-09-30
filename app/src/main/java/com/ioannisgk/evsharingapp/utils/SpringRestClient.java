@@ -101,8 +101,6 @@ public class SpringRestClient {
         body.put("username", theUsername);
         body.put("password", thePassword);
 
-        System.out.println("OUT: " + thePassword);
-
         HttpEntity<Object> request = new HttpEntity<Object>(body, getHeaders());
         ResponseEntity<User> response = restTemplate.exchange(
                 REST_SERVICE_URI + "/login/" + QPM_ACCESS_TOKEN + tokenInfo.getAccess_token(),

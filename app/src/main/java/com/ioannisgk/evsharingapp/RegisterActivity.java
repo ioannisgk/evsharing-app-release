@@ -31,7 +31,6 @@ import java.util.regex.Pattern;
 public class RegisterActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     EditText regName;
     EditText regDate;
-    EditText regGender;
     EditText regUsername;
     EditText regPassword;
     Button register;
@@ -47,7 +46,6 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
 
         regName = (EditText) findViewById(R.id.nameEditText);
         regDate = (EditText) findViewById(R.id.dobEditText);
-        regGender = (EditText) findViewById(R.id.genderEditText);
         regUsername = (EditText) findViewById(R.id.usernameEditText);
         regPassword = (EditText) findViewById(R.id.passwordEditText);
         register = (Button) findViewById(R.id.registerButton);
