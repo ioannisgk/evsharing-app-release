@@ -5,7 +5,7 @@ import java.util.Date;
 
 public class User implements Serializable {
 
-    // Class attributes mapped to table columns in database
+    // Class attributes
 
     private int id;
     private String username;

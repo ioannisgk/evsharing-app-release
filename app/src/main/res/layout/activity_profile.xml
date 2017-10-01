@@ -107,26 +107,23 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <Button
+        android:id="@+id/requestButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_below="@+id/linearLayout1"
-        android:id="@+id/linearLayout2">
+        android:layout_marginTop="10dp"
+        android:text="@string/requestProfileActivity" />
 
-        <Button
-            android:id="@+id/requestButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/requestProfileActivity" />
-
-        <Button
-            android:id="@+id/historyButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/historyProfileActivity" />
-
-    </LinearLayout>
+    <Button
+        android:id="@+id/historyButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/requestButton"
+        android:text="@string/historyProfileActivity" />
 
 </RelativeLayout>

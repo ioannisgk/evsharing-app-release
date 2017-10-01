@@ -2,11 +2,13 @@ package com.ioannisgk.evsharingapp.utils;
 
 import android.util.Base64;
 
+import com.ioannisgk.evsharingapp.entities.Station;
 import com.ioannisgk.evsharingapp.entities.User;
 
 import java.net.URI;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -179,5 +181,45 @@ public class SpringRestClient {
         if (response.getBody() != null) {
             return true;
         } else return null;
+    }
+
+    // Send a GET request to get list of all stations
+
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public List<Station> getStations(AuthTokenInfo tokenInfo) {
+
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+
+        HttpEntity<String> request = new HttpEntity<String>(getHeaders());
+
+        ResponseEntity<List> response = restTemplate.exchange(
+                REST_SERVICE_URI + "/stations/" + QPM_ACCESS_TOKEN + tokenInfo.getAccess_token(),
+                HttpMethod.GET,
+                request,
+                List.class);
+
+        // Convert the hash map from the response body into a list of stations
+
+        List<LinkedHashMap<String, Object>> stationsMap = (List<LinkedHashMap<String, Object>>) response.getBody();
+        List<Station> theStations = new ArrayList<Station>();
+
+        if (stationsMap != null) {
+
+            for(LinkedHashMap<String, Object> map : stationsMap){
+
+                Station tempStation = new Station();
+                tempStation.setId(Integer.parseInt(map.get("id").toString()));
+                tempStation.setName((map.get("name")).toString());
+                tempStation.setLatitude(Double.parseDouble(map.get("latitude").toString()));
+                tempStation.setLongitude(Double.parseDouble(map.get("longitude").toString()));
+                tempStation.setTrafficLevel(Integer.parseInt(map.get("trafficLevel").toString()));
+                theStations.add(tempStation);
+            }
+
+        } else {
+            System.out.println("No stations exist");
+        }
+        return theStations;
     }
 }

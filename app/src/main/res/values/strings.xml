@@ -7,7 +7,8 @@
     <string name="usernameMainActivity">Username</string>
     <string name="passwordMainActivity">Password</string>
     <string name="loginMainActivity">Login Now</string>
-    <string name="registerMainActivity">or click here to register</string>
+    <string name="infoMainActivity">or click here to register</string>
+    <string name="registerMainActivity">Register</string>
 
     <string name="titleRegistrationActivity">User registration</string>
     <string name="nameRegistrationActivity">Full name</string>
@@ -27,5 +28,14 @@
     <string name="historyProfileActivity">User History</string>
     <string name="saveProfileActivity">Save Profile</string>
     <string name="switchProfileActivity">Edit mode disabled</string>
+
+    <string name="titleRequestActivity">Request vehicle</string>
+    <string name="nameRequestActivity">Name</string>
+    <string name="startStationRequestActivity">From station</string>
+    <string name="finishStationRequestActivity">Destination station</string>
+    <string name="timeRequestActivity">Enter time</string>
+    <string name="infoRequestActivity">Main actions</string>
+    <string name="requestRequestActivity">Send Request</string>
+    <string name="backRequestActivity">Back to Profile</string>
 
 </resources>

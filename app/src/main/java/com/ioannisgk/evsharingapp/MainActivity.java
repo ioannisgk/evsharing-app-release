@@ -27,8 +27,8 @@ public class MainActivity extends AppCompatActivity {
 
         final EditText loginUsername = (EditText) findViewById(R.id.usernameEditText);
         final EditText loginPassword = (EditText) findViewById(R.id.passwordEditText);
-        final TextView register = (TextView) findViewById(R.id.registerTextView);
         final Button login = (Button) findViewById(R.id.loginButton);
+        final Button register = (Button) findViewById(R.id.registerButton);
 
         // Start RegisterActivity when clicking on Register
 
