@@ -28,6 +28,15 @@ public class User implements Serializable {
         this.dob = dob;
     }
 
+    public User(int id, String username, String password, String name, String gender, Date dob){
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.name = name;
+        this.gender = gender;
+        this.dob = dob;
+    }
+
     public User(String requestStatus){
         this.requestStatus = requestStatus;
     }

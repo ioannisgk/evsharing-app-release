@@ -83,7 +83,7 @@ public class SpringRestClient {
             tokenInfo.setScope((String)map.get("scope"));
 
         } else {
-            System.out.println("No user exist----------");
+            System.out.println("No user exists");
         }
         return tokenInfo;
     }
@@ -115,26 +115,6 @@ public class SpringRestClient {
         } else return new User("Invalid login details");
     }
 
-    // Send a GET request to get a specific user
-
-    private static void getUser(AuthTokenInfo tokenInfo){
-
-        Assert.notNull(tokenInfo, "Authenticate first please......");
-        System.out.println("\n2. Testing getUser API----------");
-
-        RestTemplate restTemplate = new RestTemplate();
-
-        HttpEntity<String> request = new HttpEntity<String>(getHeaders());
-        ResponseEntity<User> response = restTemplate.exchange(
-                REST_SERVICE_URI + "/user/4" + QPM_ACCESS_TOKEN + tokenInfo.getAccess_token(),
-                HttpMethod.GET,
-                request,
-                User.class);
-
-        User theUser = response.getBody();
-        System.out.println(theUser);
-    }
-
     // Send a POST request to create a new user
 
     public Boolean createUser(AuthTokenInfo tokenInfo, User theUser) {
@@ -151,7 +131,7 @@ public class SpringRestClient {
                     request,
                     User.class);
 
-        // Catch exception and return false in case the username is already taken
+        // Catch exception and return false if the username is already taken
 
         } catch (HttpClientErrorException e) {
 
@@ -172,64 +152,32 @@ public class SpringRestClient {
 
     // Send a PUT request to update an existing user
 
-    private static void updateUser(AuthTokenInfo tokenInfo) {
-
-        Assert.notNull(tokenInfo, "Authenticate first please......");
+    public Boolean updateUser(AuthTokenInfo tokenInfo, User theUser) {
+        ResponseEntity<User> response = null;
 
         RestTemplate restTemplate = new RestTemplate();
-
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-        Date currentDob = null;
-        try {
-            currentDob = format.parse("02/02/1990");
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        User theUser  = new User("01usernameTest8s8", "01passwordTest8s8", "01WSSSWffff", "MALE", currentDob);
+        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
         HttpEntity<Object> request = new HttpEntity<Object>(theUser, getHeaders());
-        ResponseEntity<User> response = restTemplate.exchange(
-                REST_SERVICE_URI + "/user/4" + QPM_ACCESS_TOKEN + tokenInfo.getAccess_token(),
+
+        try {
+        response = restTemplate.exchange(
+                REST_SERVICE_URI + "/user/" + theUser.getId() + QPM_ACCESS_TOKEN + tokenInfo.getAccess_token(),
                 HttpMethod.PUT,
                 request,
                 User.class);
 
-        System.out.println(response.getBody());
+        // Catch exception and return false if the username is not found
+
+        } catch (HttpClientErrorException e) {
+
+            if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
+                return false;
+            }
+        }
+
+        if (response.getBody() != null) {
+            return true;
+        } else return null;
     }
-
-    // Send a DELETE request to delete a specific user
-
-    private static void deleteUser(AuthTokenInfo tokenInfo) {
-
-        Assert.notNull(tokenInfo, "Authenticate first please......");
-        System.out.println("\n5. Testing delete User API----------");
-
-        RestTemplate restTemplate = new RestTemplate();
-
-        HttpEntity<String> request = new HttpEntity<String>(getHeaders());
-        restTemplate.exchange(
-                REST_SERVICE_URI + "/user/4" + QPM_ACCESS_TOKEN + tokenInfo.getAccess_token(),
-                HttpMethod.DELETE,
-                request, User.class);
-    }
-
-    //public static void main(String args[]){
-
-        //AuthTokenInfo tokenInfo = sendTokenRequest();
-        //listAllUsers(tokenInfo);
-
-        //loginUser(tokenInfo);
-
-        //getUser(tokenInfo);
-
-        //createUser(tokenInfo);
-        //listAllUsers(tokenInfo);
-
-        //updateUser(tokenInfo);
-        //listAllUsers(tokenInfo);
-
-        //deleteUser(tokenInfo);
-        //listAllUsers(tokenInfo);
-   // }
 }

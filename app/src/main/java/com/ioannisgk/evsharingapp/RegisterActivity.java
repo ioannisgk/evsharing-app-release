@@ -59,6 +59,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
         genderSpinner.setOnItemSelectedListener(this);
 
         // Registration when clicking on Register
+
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,7 +69,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
                 final String password = regPassword.getText().toString();
 
                 // Validate input data from the registration form
-                boolean dataIsValid = Settings.validate(name, username, password, date, RegisterActivity.this);
+                boolean dataIsValid = Settings.validateRegisterData(name, username, password, date, RegisterActivity.this);
 
                 if (dataIsValid == true) {
 
@@ -91,7 +92,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
                     User currentUser = new User(username, encryptedPassword, name, gender, myDate);
 
                     // Execute async task and pass current user object
-                    new RegisterActivity.HttpRequestTask().execute(currentUser);
+                    new HttpRequestTask().execute(currentUser);
 
                 }
             }

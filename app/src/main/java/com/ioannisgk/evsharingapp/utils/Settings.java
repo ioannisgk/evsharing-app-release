@@ -3,6 +3,7 @@ package com.ioannisgk.evsharingapp.utils;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.widget.Toast;
 
 import com.ioannisgk.evsharingapp.RegisterActivity;
 
@@ -13,21 +14,22 @@ import java.util.regex.Pattern;
 
 public class Settings {
 
+    public static void showToast(Context context, String message) {
+
+        Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+    }
+
     // Validate input data from the registration form
 
-    public static boolean validate(String theName, String theUsername, String thePassword, String theDate, Context context) {
+    public static boolean validateRegisterData(String theName, String theUsername, String thePassword, String theDate, Context context) {
         int year = 0, currentYear = 0;
 
         // Extract year string and convert it to int variable
-
-        System.out.println("DATE: " + theDate);
 
         if ((theDate.length() == 8) || (theDate.length() == 9) || (theDate.length() == 10)) {
             String theYear = theDate.substring(theDate.length() - 4);
             year = Integer.parseInt(theYear);
             currentYear = Calendar.getInstance().get(Calendar.YEAR);
-
-            System.out.println("YEAR ENTERED: " + year + "CURRENT YEAR: " + currentYear);
         }
 
         if ((theName.isEmpty()) || (theUsername.isEmpty()) || (thePassword.isEmpty())) {
@@ -62,6 +64,38 @@ public class Settings {
                 showDialogBox("Register error", "Username is not a valid email", context);
                 return false;
             }
+        }
+        return true;
+    }
+
+    // Validate input data from the profile form
+
+    public static boolean validateProfileData(String theName, String theDate, Context context) {
+        int year = 0, currentYear = 0;
+
+        // Extract year string and convert it to int variable
+
+        if ((theDate.length() == 8) || (theDate.length() == 9) || (theDate.length() == 10)) {
+            String theYear = theDate.substring(theDate.length() - 4);
+            year = Integer.parseInt(theYear);
+            currentYear = Calendar.getInstance().get(Calendar.YEAR);
+        }
+
+        if (theName.isEmpty()) {
+
+            showDialogBox("Register error", "Empty fields detected", context);
+            return false;
+
+        } else if (theName.length() < 6) {
+
+            showDialogBox("Register error", "Minimum number of chars is 6", context);
+            return false;
+
+        } else if (((currentYear - year) <= 18) || ((currentYear - year) >100)) {
+
+            showDialogBox("Register error", "You must be 19-100 years old to use this service", context);
+            return false;
+
         }
         return true;
     }

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.icu.text.DateFormat;
 import android.icu.text.SimpleDateFormat;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -22,8 +23,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ioannisgk.evsharingapp.entities.User;
+import com.ioannisgk.evsharingapp.utils.AuthTokenInfo;
 import com.ioannisgk.evsharingapp.utils.DateDialog;
+import com.ioannisgk.evsharingapp.utils.MyTextEncryptor;
+import com.ioannisgk.evsharingapp.utils.Settings;
+import com.ioannisgk.evsharingapp.utils.SpringRestClient;
 
+import java.text.ParseException;
+import java.util.Date;
 import java.util.Locale;
 
 import static android.R.attr.type;
@@ -44,6 +51,9 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        // Welcome toast
+        Settings.showToast(getApplicationContext(), "Login was successful");
+
         // Get activity resources
 
         profileMessage = (TextView) findViewById(R.id.titleTextView);
@@ -63,9 +73,9 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
         genderSpinner.setOnItemSelectedListener(this);
 
         // Get the current user object from the previous intent
-        User theUser = (User) getIntent().getSerializableExtra("currentUser");
+        final User theUser = (User) getIntent().getSerializableExtra("currentUser");
 
-        //
+        // Set spinner value to current user gender value
         if (theUser.getGender().equals("Female")) genderSpinner.setSelection(1);
 
         // Format date
@@ -101,16 +111,37 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
             }
         });
 
-        //
+        // Saving profile when clicking on save profile
 
         saveProfile.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                final String username = theUser.getUsername();
+                final String password = theUser.getPassword();
+                final String name = profileName.getText().toString();
+                final String date = profileDate.getText().toString();
 
-            // read name, gender, date
-            // validate data
-            // pass new user object in async task to change data using rest
-                //
+                // Validate input data from editing the profile
+                boolean dataIsValid = Settings.validateProfileData(name, date, ProfileActivity.this);
 
+                if (dataIsValid == true) {
+
+                    // Format date
+
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                    Date myDate = null;
+                    try {
+                        myDate = dateFormat.parse(date);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
+                    // Create current user object from the data entered in the registration form
+                    User currentUser = new User(theUser.getId(), username, password, name, gender, myDate);
+
+                    // Execute async task and pass current user object
+                    new HttpRequestTask().execute(currentUser);
+
+                }
             }
         });
 
@@ -132,11 +163,57 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
                     switch1.setText("Edit mode disabled");
                     alterProfileControls(false);
                 }
-
-                Toast.makeText(getApplicationContext(), "Switch1 :" + switchState , Toast.LENGTH_LONG).show();
             }
 
         });
+    }
+
+    private class HttpRequestTask extends AsyncTask<User, Void, Boolean> {
+        @Override
+        protected Boolean doInBackground(User... params) {
+
+            // User data entered in the registration form
+            User currentUser = (User) params[0];
+
+            // Try to connect to server and use the web service
+
+            try {
+
+                // Create new SpringRestClient object
+                SpringRestClient restClient = new SpringRestClient();
+
+                // Get an access token which will be send with each request
+                AuthTokenInfo tokenInfo = restClient.sendTokenRequest();
+
+                // Login via web service and retrieve user object
+                Boolean registered = restClient.updateUser(tokenInfo, currentUser);
+
+                return registered;
+
+            } catch (RuntimeException e) {
+
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Boolean registered) {
+
+            if (registered != null) {
+                if (registered == true) {
+
+                    Settings.showToast(getApplicationContext(), "Profile updated successfully");
+                    alterProfileControls(false);
+
+                } else if (registered == false) {
+                    Settings.showDialogBox("Profile error", "Could not find user in the database", ProfileActivity.this);
+                }
+
+            } else {
+                Settings.showDialogBox("Server error", "Could not connect to server", ProfileActivity.this);
+            }
+        }
     }
 
     // Create new date dialogue object and show the selected date in the text box
