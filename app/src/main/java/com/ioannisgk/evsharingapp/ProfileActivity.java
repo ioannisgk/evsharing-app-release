@@ -98,6 +98,7 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
         request.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent i1 = new Intent(ProfileActivity.this, RequestActivity.class);
+                i1.putExtra("currentUser", theUser);
                 startActivity(i1);
             }
         });

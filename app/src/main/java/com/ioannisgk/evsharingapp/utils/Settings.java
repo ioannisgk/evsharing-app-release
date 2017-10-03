@@ -100,6 +100,29 @@ public class Settings {
         return true;
     }
 
+    // Validate input data from the request form
+
+    public static boolean validateRequestData(int startStationID, int finishStationID, String theTime, Context context) {
+
+        if (startStationID == finishStationID) {
+
+            showDialogBox("Request error", "Start and destination stations can not be the same", context);
+            return false;
+
+        } else if (Integer.parseInt(theTime.substring(0,2)) < 6) {
+
+            showDialogBox("Request error", "Earliest time is 06:00", context);
+            return false;
+
+        } else if (Integer.parseInt(theTime.substring(0,2)) > 22) {
+
+            showDialogBox("Request error", "Latest time is 22:00", context);
+            return false;
+
+        }
+        return true;
+    }
+
     // Show dialogue box message
 
     public static void showDialogBox(String title, String message, Context context) {

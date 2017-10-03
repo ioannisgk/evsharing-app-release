@@ -1,7 +1,9 @@
 package com.ioannisgk.evsharingapp;
 
 import android.app.AlertDialog;
+import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.icu.text.SimpleDateFormat;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,8 +22,11 @@ import android.widget.TextView;
 import com.ioannisgk.evsharingapp.entities.Station;
 import com.ioannisgk.evsharingapp.entities.User;
 import com.ioannisgk.evsharingapp.utils.AuthTokenInfo;
+import com.ioannisgk.evsharingapp.utils.DateDialog;
+import com.ioannisgk.evsharingapp.utils.MyTextEncryptor;
 import com.ioannisgk.evsharingapp.utils.Settings;
 import com.ioannisgk.evsharingapp.utils.SpringRestClient;
+import com.ioannisgk.evsharingapp.utils.TimeDialog;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -30,10 +35,15 @@ import org.w3c.dom.NodeList;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -64,6 +74,41 @@ public class RequestActivity extends AppCompatActivity implements AdapterView.On
     int selectedStartStationID;
     int selectedFinishStationID;
 
+    // Attributes for TCP connection
+
+    public Socket sender;
+    public PrintWriter out;
+    public BufferedReader in;
+    //String ipAddress = "178.62.121.237";
+    String ipAddress = "10.0.0.2";
+    int portNumber = 5566;
+
+    // Listener for TCP message
+
+    class SocketListener implements Runnable {
+
+        public void run() {
+
+                try {
+                    sender = new Socket(ipAddress, portNumber);
+                    out = new PrintWriter(sender.getOutputStream(), true);
+                    in = new BufferedReader(new InputStreamReader(sender.getInputStream()));
+
+                    while (true) {
+
+                        //
+
+                        String incomingMessage = in.readLine();
+                        System.out.println(incomingMessage);
+
+                    }
+                } catch (IOException e) {
+
+                    Settings.showDialogBox("Network error", "Received corrupted data", RequestActivity.this);
+                }
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +123,12 @@ public class RequestActivity extends AppCompatActivity implements AdapterView.On
         startStationSpinner = (Spinner) findViewById(R.id.startStationSpinner);
         finishStationSpinner = (Spinner) findViewById(R.id.finishStationSpinner);
 
+        // Get the current user object from the previous intent
+        final User theUser = (User) getIntent().getSerializableExtra("currentUser");
+
+        // Display current username
+        profileName.setText(theUser.getUsername());
+
         // Execute async task to get station objects
         new HttpRequestTask().execute();
 
@@ -91,14 +142,56 @@ public class RequestActivity extends AppCompatActivity implements AdapterView.On
             }
         });
 
+        // Sending request when clicking on send request
 
-        // Retrieve user object and name to display it
-        // Search for time input control
-        // Send String via TCP to server
-        // Receive and display result
+        sendRequest.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                final int userId = theUser.getId();
+                final String time = requestTime.getText().toString();
+
+                // Validate input data from editing the profile
+                boolean dataIsValid = Settings.validateRequestData(selectedStartStationID, selectedFinishStationID, time, RequestActivity.this);
+
+                if (dataIsValid == true) {
+
+                    // Send TCP message that contains user id, start station id, finish station id and time
 
 
 
+                        final String message = userId + " " + selectedStartStationID + " " + selectedFinishStationID + " " + time;
+
+                        // Encrypt message string with text encryptor
+
+                        MyTextEncryptor textEncryptor = new MyTextEncryptor();
+                        String encryptedMessage = textEncryptor.encryptPassword(message);
+
+                        //
+                        System.out.println("OUT: " + message);
+
+                        new Thread() {
+                            public void run() {
+                                out.println(message);
+                            }
+                        }.start();
+
+                }
+            }
+        });
+    }
+
+    // Create new date dialogue object and show the selected date in the text box
+
+    public void onStart(){
+        super.onStart();
+        requestTime.setOnFocusChangeListener(new View.OnFocusChangeListener(){
+            public void onFocusChange(View view, boolean hasfocus){
+                if (hasfocus) {
+                    TimeDialog dialog = new TimeDialog(view);
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    dialog.show(ft, "TimePicker");
+                }
+            }
+        });
     }
 
     private class HttpRequestTask extends AsyncTask<Void, Void, List<Station>> {
