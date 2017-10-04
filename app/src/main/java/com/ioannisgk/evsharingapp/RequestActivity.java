@@ -79,8 +79,7 @@ public class RequestActivity extends AppCompatActivity implements AdapterView.On
     public Socket sender;
     public PrintWriter out;
     public BufferedReader in;
-    //String ipAddress = "178.62.121.237";
-    String ipAddress = "10.0.0.2";
+    String ipAddress = "178.62.121.237";
     int portNumber = 5566;
 
     // Listener for TCP message
@@ -90,15 +89,19 @@ public class RequestActivity extends AppCompatActivity implements AdapterView.On
         public void run() {
 
                 try {
+
                     sender = new Socket(ipAddress, portNumber);
                     out = new PrintWriter(sender.getOutputStream(), true);
                     in = new BufferedReader(new InputStreamReader(sender.getInputStream()));
 
                     while (true) {
 
-                        //
+                        // Receive message from server
 
                         String incomingMessage = in.readLine();
+
+                        // *** Need to show accepted or not accepted in another way
+
                         System.out.println(incomingMessage);
 
                     }
@@ -142,6 +145,11 @@ public class RequestActivity extends AppCompatActivity implements AdapterView.On
             }
         });
 
+        // Start TCP listener in a new thread
+
+        Thread listenerThread = new Thread(new SocketListener());
+        listenerThread.start();
+
         // Sending request when clicking on send request
 
         sendRequest.setOnClickListener(new View.OnClickListener() {
@@ -156,24 +164,22 @@ public class RequestActivity extends AppCompatActivity implements AdapterView.On
 
                     // Send TCP message that contains user id, start station id, finish station id and time
 
+                    final String message = userId + " " + selectedStartStationID + " " + selectedFinishStationID + " " + time;
 
+                    // Encrypt message string with text encryptor
 
-                        final String message = userId + " " + selectedStartStationID + " " + selectedFinishStationID + " " + time;
+                    MyTextEncryptor textEncryptor = new MyTextEncryptor();
+                    String encryptedMessage = textEncryptor.encryptPassword(message);
 
-                        // Encrypt message string with text encryptor
+                    // Send the message in a new thread
 
-                        MyTextEncryptor textEncryptor = new MyTextEncryptor();
-                        String encryptedMessage = textEncryptor.encryptPassword(message);
+                    // *** Need to send encrypted message
 
-                        //
-                        System.out.println("OUT: " + message);
-
-                        new Thread() {
-                            public void run() {
-                                out.println(message);
-                            }
-                        }.start();
-
+                    new Thread() {
+                        public void run() {
+                            out.println(message);
+                        }
+                    }.start();
                 }
             }
         });
