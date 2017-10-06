@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">EVsharing App</string>
+    <string name="app_name">EV Sharing App</string>
     <string name="action_settings">Main Menu</string>
     <string name="titleAboutActivity">About us</string>
 
@@ -37,5 +37,23 @@
     <string name="infoRequestActivity">Main actions</string>
     <string name="requestRequestActivity">Send Request</string>
     <string name="backRequestActivity">Back to Profile</string>
+
+    <string name="titleAcceptedActivity">Vehicle request</string>
+    <string name="nameAcceptedActivity">Your request is accepted and confirmed</string>
+    <string name="infoAcceptedActivity">Main actions</string>
+    <string name="backAcceptedActivity">Back to Profile</string>
+    <string name="historyAcceptedActivity">User History</string>
+
+    <string name="titleDeniedActivity">Vehicle request</string>
+    <string name="nameDeniedActivity">Your request is denied try other settings</string>
+    <string name="infoDeniedActivity">Main actions</string>
+    <string name="backDeniedActivity">Back to Profile</string>
+    <string name="historyDeniedActivity">User History</string>
+
+    <string name="titleErrorActivity">Vehicle request</string>
+    <string name="nameErrorActivity">Server communication error try again later</string>
+    <string name="infoErrorActivity">Main actions</string>
+    <string name="backErrorActivity">Back to Profile</string>
+    <string name="historyErrorActivity">User History</string>
 
 </resources>

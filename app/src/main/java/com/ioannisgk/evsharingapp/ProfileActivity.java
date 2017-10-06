@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.ioannisgk.evsharingapp.entities.User;
 import com.ioannisgk.evsharingapp.utils.AuthTokenInfo;
 import com.ioannisgk.evsharingapp.utils.DateDialog;
+import com.ioannisgk.evsharingapp.utils.Global;
 import com.ioannisgk.evsharingapp.utils.MyTextEncryptor;
 import com.ioannisgk.evsharingapp.utils.Settings;
 import com.ioannisgk.evsharingapp.utils.SpringRestClient;
@@ -51,9 +52,6 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        // Welcome toast
-        Settings.showToast(getApplicationContext(), "Login was successful");
-
         // Get activity resources
 
         profileMessage = (TextView) findViewById(R.id.titleTextView);
@@ -72,22 +70,19 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
         genderSpinner.setAdapter(adapter);
         genderSpinner.setOnItemSelectedListener(this);
 
-        // Get the current user object from the previous intent
-        final User theUser = (User) getIntent().getSerializableExtra("currentUser");
-
         // Set spinner value to current user gender value
-        if (theUser.getGender().equals("Female")) genderSpinner.setSelection(1);
+        if (Global.currentUser.getGender().equals("Female")) genderSpinner.setSelection(1);
 
         // Format date
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        String myDate = dateFormat.format(theUser.getDob());
+        String myDate = dateFormat.format(Global.currentUser.getDob());
 
         // Display user details
 
-        String message = "Welcome back " + theUser.getUsername();
+        String message = "Welcome back " + Global.currentUser.getUsername();
         profileMessage.setText(message);
-        profileName.setText(theUser.getName());
+        profileName.setText(Global.currentUser.getName());
         profileDate.setText(myDate);
 
         // Make profile fields inactive and not editable
@@ -98,7 +93,6 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
         request.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent i1 = new Intent(ProfileActivity.this, RequestActivity.class);
-                i1.putExtra("currentUser", theUser);
                 startActivity(i1);
             }
         });
@@ -116,8 +110,8 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
 
         saveProfile.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                final String username = theUser.getUsername();
-                final String password = theUser.getPassword();
+                final String username = Global.currentUser.getUsername();
+                final String password = Global.currentUser.getPassword();
                 final String name = profileName.getText().toString();
                 final String date = profileDate.getText().toString();
 
@@ -137,11 +131,16 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
                     }
 
                     // Create current user object from the data entered in the registration form
-                    User currentUser = new User(theUser.getId(), username, password, name, gender, myDate);
+                    User currentUser = new User(Global.currentUser.getId(), username, password, name, gender, myDate);
 
                     // Execute async task and pass current user object
                     new HttpRequestTask().execute(currentUser);
 
+                    // Update the global user object
+
+                    Global.currentUser.setName(name);
+                    Global.currentUser.setGender(gender);
+                    Global.currentUser.setDob(myDate);
                 }
             }
         });
@@ -318,6 +317,7 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
                 startActivity (i3);
                 return true;
             case 3:
+                Global.currentUser = null;
                 Intent i4 = new Intent(this, MainActivity.class);
                 startActivity (i4);
                 finish();

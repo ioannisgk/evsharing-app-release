@@ -28,16 +28,14 @@ android {
 
 
 
+
+
+
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'org.springframework.android:spring-android-rest-template:1.0.1.RELEASE'
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.3.2'
-    testCompile 'junit:junit:4.12'
     compile files('lib/icu4j-3.4.4.jar')
     compile files('lib/jasypt-1.9.2.jar')
     compile files('lib/jasypt-1.9.2-javadoc.jar')
@@ -52,4 +50,9 @@ dependencies {
     compile files('lib/jasypt-springsecurity3-1.9.2.jar')
     compile files('lib/jasypt-wicket13-1.9.2.jar')
     compile files('lib/jasypt-wicket15-1.9.2.jar')
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'org.springframework.android:spring-android-rest-template:1.0.1.RELEASE'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.3.2'
+    testCompile 'junit:junit:4.12'
 }

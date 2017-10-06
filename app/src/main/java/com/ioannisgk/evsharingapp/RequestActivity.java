@@ -1,6 +1,7 @@
 package com.ioannisgk.evsharingapp;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.icu.text.SimpleDateFormat;
@@ -21,8 +22,12 @@ import android.widget.TextView;
 
 import com.ioannisgk.evsharingapp.entities.Station;
 import com.ioannisgk.evsharingapp.entities.User;
+import com.ioannisgk.evsharingapp.responses.AcceptedActivity;
+import com.ioannisgk.evsharingapp.responses.DeniedActivity;
+import com.ioannisgk.evsharingapp.responses.ErrorActivity;
 import com.ioannisgk.evsharingapp.utils.AuthTokenInfo;
 import com.ioannisgk.evsharingapp.utils.DateDialog;
+import com.ioannisgk.evsharingapp.utils.Global;
 import com.ioannisgk.evsharingapp.utils.MyTextEncryptor;
 import com.ioannisgk.evsharingapp.utils.Settings;
 import com.ioannisgk.evsharingapp.utils.SpringRestClient;
@@ -97,17 +102,39 @@ public class RequestActivity extends AppCompatActivity implements AdapterView.On
                     while (true) {
 
                         // Receive message from server
-
                         String incomingMessage = in.readLine();
 
-                        // *** Need to show accepted or not accepted in another way
+                        // Start response activities based on the server response and pass the user object
 
-                        System.out.println(incomingMessage);
+                        if (incomingMessage != null) {
+                            if (incomingMessage.equals("Accepted")) {
 
+                                out.println("bye");
+                                Intent intent = new Intent(RequestActivity.this, AcceptedActivity.class);
+                                startActivity(intent);
+                                finish();
+
+                            } else if (incomingMessage.equals("Denied")) {
+
+                                out.println("bye");
+                                Intent intent = new Intent(RequestActivity.this, DeniedActivity.class);
+                                startActivity(intent);
+                                finish();
+
+                            } else {
+
+                                out.println("bye");
+                                Intent intent = new Intent(RequestActivity.this, ErrorActivity.class);
+                                startActivity(intent);
+                                finish();
+                            }
+                        }
                     }
                 } catch (IOException e) {
 
-                    Settings.showDialogBox("Network error", "Received corrupted data", RequestActivity.this);
+                    Intent intent = new Intent(RequestActivity.this, ErrorActivity.class);
+                    startActivity(intent);
+                    finish();
                 }
         }
     }
@@ -126,11 +153,8 @@ public class RequestActivity extends AppCompatActivity implements AdapterView.On
         startStationSpinner = (Spinner) findViewById(R.id.startStationSpinner);
         finishStationSpinner = (Spinner) findViewById(R.id.finishStationSpinner);
 
-        // Get the current user object from the previous intent
-        final User theUser = (User) getIntent().getSerializableExtra("currentUser");
-
         // Display current username
-        profileName.setText(theUser.getUsername());
+        profileName.setText(Global.currentUser.getUsername());
 
         // Execute async task to get station objects
         new HttpRequestTask().execute();
@@ -154,7 +178,7 @@ public class RequestActivity extends AppCompatActivity implements AdapterView.On
 
         sendRequest.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                final int userId = theUser.getId();
+                final int userId = Global.currentUser.getId();
                 final String time = requestTime.getText().toString();
 
                 // Validate input data from editing the profile
@@ -163,7 +187,6 @@ public class RequestActivity extends AppCompatActivity implements AdapterView.On
                 if (dataIsValid == true) {
 
                     // Send TCP message that contains user id, start station id, finish station id and time
-
                     final String message = userId + " " + selectedStartStationID + " " + selectedFinishStationID + " " + time;
 
                     // Encrypt message string with text encryptor
@@ -175,11 +198,21 @@ public class RequestActivity extends AppCompatActivity implements AdapterView.On
 
                     // *** Need to send encrypted message
 
-                    new Thread() {
-                        public void run() {
-                            out.println(message);
-                        }
-                    }.start();
+
+                    // If there is a TCP connection with the server send message else start error activity
+
+                    if (out != null) {
+
+                        new Thread() {
+                            public void run() {
+                                out.println(message);
+                            }
+                        }.start();
+
+                    } else {
+                        Intent intent = new Intent(RequestActivity.this, ErrorActivity.class);
+                        startActivity(intent);
+                    }
                 }
             }
         });
@@ -255,9 +288,7 @@ public class RequestActivity extends AppCompatActivity implements AdapterView.On
                     }
 
                     // Retrieve stations and populate spinners from arrays
-
                     populateSpinners();
-                    Settings.showToast(getApplicationContext(), "Stations retrieved successfully");
 
                 } else if (theStations.size() == 0) {
                     Settings.showDialogBox("Stations error", "Could not find stations in the database", RequestActivity.this);
@@ -340,6 +371,7 @@ public class RequestActivity extends AppCompatActivity implements AdapterView.On
                 startActivity (i3);
                 return true;
             case 3:
+                Global.currentUser = null;
                 Intent i4 = new Intent(this, MainActivity.class);
                 startActivity (i4);
                 finish();

@@ -2,10 +2,15 @@ package com.ioannisgk.evsharingapp.utils;
 
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
+import com.ioannisgk.evsharingapp.R;
 import com.ioannisgk.evsharingapp.RegisterActivity;
+import com.ioannisgk.evsharingapp.RequestActivity;
 
 import java.util.Calendar;
 import java.util.regex.Matcher;
@@ -109,6 +114,11 @@ public class Settings {
             showDialogBox("Request error", "Start and destination stations can not be the same", context);
             return false;
 
+        } else if (theTime.isEmpty()) {
+
+            showDialogBox("Request error", "Empty fields detected", context);
+            return false;
+
         } else if (Integer.parseInt(theTime.substring(0,2)) < 6) {
 
             showDialogBox("Request error", "Earliest time is 06:00", context);
@@ -134,4 +144,5 @@ public class Settings {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(title).setMessage(message).setPositiveButton("OK", null).create().show();
     }
+
 }

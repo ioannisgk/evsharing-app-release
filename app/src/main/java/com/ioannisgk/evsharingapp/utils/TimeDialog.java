@@ -35,14 +35,25 @@ public class TimeDialog extends DialogFragment implements TimePickerDialog.OnTim
     // Show the selected date in the text box
 
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        boolean isDoubleDigit = (minute > 9 && minute < 100) || (minute < -9 && minute > -100);
         String time = "";
 
-        if (isDoubleDigit == true) {
-            time = hourOfDay + ":" + minute;
+        if (minute < 10) {
+
+            if (hourOfDay < 10) {
+                time = "0" + hourOfDay + ":0" + minute;
+            } else {
+                time = hourOfDay + ":0" + minute;
+            }
+
         } else {
-            time = hourOfDay + ":0" + minute;
+
+            if (hourOfDay < 10) {
+                time = "0" + hourOfDay + ":" + minute;
+            } else {
+            time = hourOfDay + ":" + minute;
+            }
         }
+
         textTime.setText(time);
     }
 }

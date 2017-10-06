@@ -22,7 +22,10 @@
         <activity android:name=".RegisterActivity" />
         <activity android:name=".AboutActivity" />
         <activity android:name=".RequestActivity" />
-        <activity android:name=".HistoryActivity"></activity>
+        <activity android:name=".HistoryActivity" />
+        <activity android:name=".responses.AcceptedActivity" />
+        <activity android:name=".responses.DeniedActivity" />
+        <activity android:name=".responses.ErrorActivity"></activity>
     </application>
 
 </manifest>

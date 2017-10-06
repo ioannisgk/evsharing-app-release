@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import com.ioannisgk.evsharingapp.entities.User;
 import com.ioannisgk.evsharingapp.utils.AuthTokenInfo;
+import com.ioannisgk.evsharingapp.utils.Global;
 import com.ioannisgk.evsharingapp.utils.MyTextEncryptor;
 import com.ioannisgk.evsharingapp.utils.Settings;
 import com.ioannisgk.evsharingapp.utils.SpringRestClient;
@@ -97,9 +98,9 @@ public class MainActivity extends AppCompatActivity {
                 AuthTokenInfo tokenInfo = restClient.sendTokenRequest();
 
                 // Login via web service and retrieve user object
-                User theUser = restClient.loginUser(tokenInfo, username, password);
+                Global.currentUser = restClient.loginUser(tokenInfo, username, password);
 
-                return theUser;
+                return Global.currentUser;
 
             } catch (RuntimeException e) {
 
@@ -117,7 +118,6 @@ public class MainActivity extends AppCompatActivity {
                     // Start ProfileActivity and pass the user object
 
                     Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
-                    intent.putExtra("currentUser", theUser);
                     MainActivity.this.startActivity(intent);
 
                     // Kill MainActivity

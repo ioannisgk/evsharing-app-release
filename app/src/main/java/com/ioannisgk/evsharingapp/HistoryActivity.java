@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.ioannisgk.evsharingapp.utils.Global;
+
 public class HistoryActivity extends AppCompatActivity {
 
     @Override
@@ -52,6 +54,7 @@ public class HistoryActivity extends AppCompatActivity {
                 startActivity (i3);
                 return true;
             case 3:
+                Global.currentUser = null;
                 Intent i4 = new Intent(this, MainActivity.class);
                 startActivity (i4);
                 finish();
