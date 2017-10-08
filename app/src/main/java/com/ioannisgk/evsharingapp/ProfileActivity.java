@@ -52,6 +52,11 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        // Add icon to action bar
+
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setIcon(R.drawable.logo_32x32);
+
         // Get activity resources
 
         profileMessage = (TextView) findViewById(R.id.titleTextView);

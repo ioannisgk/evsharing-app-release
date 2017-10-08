@@ -15,6 +15,11 @@ public class AboutActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
 
+        // Add icon to action bar
+
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setIcon(R.drawable.logo_32x32);
+
         // Get activity resources
         final TextView aboutText = (TextView) findViewById(R.id.fileTextView);
 

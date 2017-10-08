@@ -26,6 +26,11 @@ public class HistoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
 
+        // Add icon to action bar
+
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setIcon(R.drawable.logo_32x32);
+
         // Get activity resources
 
         backtoProfile = (Button) findViewById(R.id.backButton);

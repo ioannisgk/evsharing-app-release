@@ -42,6 +42,11 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        // Add icon to action bar
+
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setIcon(R.drawable.logo_32x32);
+
         // Get activity resources
 
         regName = (EditText) findViewById(R.id.nameEditText);
