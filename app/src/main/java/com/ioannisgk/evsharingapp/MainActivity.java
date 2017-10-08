@@ -17,6 +17,8 @@ import com.ioannisgk.evsharingapp.utils.MyTextEncryptor;
 import com.ioannisgk.evsharingapp.utils.Settings;
 import com.ioannisgk.evsharingapp.utils.SpringRestClient;
 
+import java.io.File;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -30,6 +32,12 @@ public class MainActivity extends AppCompatActivity {
         final EditText loginPassword = (EditText) findViewById(R.id.passwordEditText);
         final Button login = (Button) findViewById(R.id.loginButton);
         final Button register = (Button) findViewById(R.id.registerButton);
+
+        // Get file directory and create or load database with user data
+
+        File myFile = getFilesDir();
+        Global.myFile = myFile;
+        Global.myDB = Settings.createDB(Global.myDB, Global.myFile);
 
         // Start RegisterActivity when clicking on Register
 

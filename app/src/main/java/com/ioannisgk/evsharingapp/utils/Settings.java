@@ -4,7 +4,10 @@ package com.ioannisgk.evsharingapp.utils;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -12,12 +15,90 @@ import com.ioannisgk.evsharingapp.R;
 import com.ioannisgk.evsharingapp.RegisterActivity;
 import com.ioannisgk.evsharingapp.RequestActivity;
 
+import java.io.File;
 import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
 public class Settings {
+
+    // Method to create the database that holds the user's data or open it if it exists
+
+    public static SQLiteDatabase createDB(SQLiteDatabase myDB, File myFile) {
+
+        File dbFile = new File(myFile + "/myDB.db");
+        if (!dbFile.exists()) {
+            myDB = SQLiteDatabase.openOrCreateDatabase(myFile + "/myDB.db", null);
+            myDB.execSQL("create table requestHistory (date text, time text, startStation text, finishStation text, response text)");
+        } else {
+            myDB = SQLiteDatabase.openOrCreateDatabase(myFile + "/myDB.db", null);
+        }
+        return myDB;
+    }
+
+    // Method to load user's data from database and store it to global variables
+
+    public static void loadDB(SQLiteDatabase myDB, File myFile, WebView webView) {
+
+        myDB = SQLiteDatabase.openOrCreateDatabase(myFile + "/myDB.db", null);
+        Cursor cursor = myDB.rawQuery("select * from requestHistory", null);
+
+        int dateIndex = cursor.getColumnIndex("date");
+        int timeIndex = cursor.getColumnIndex("time");
+        int startStationIndex = cursor.getColumnIndex("startStation");
+        int finishStationIndex = cursor.getColumnIndex("finishStation");
+        int responseIndex = cursor.getColumnIndex("response");
+
+        String records = "";
+
+        if (cursor.moveToFirst()) {
+            do {
+                records = records +
+                        "<tr><td>" + cursor.getString(dateIndex) +
+                        "</td><td>" + cursor.getString(timeIndex) +
+                        "</td><td></td></tr>" +
+                        "<tr><td class='myrow'>" + cursor.getString(startStationIndex) +
+                        "</td><td class='myrow'>" + cursor.getString(finishStationIndex) +
+                        "</td><td class='myrow'>" + cursor.getString(responseIndex) +
+                        "</td></tr>";
+            }
+            while (cursor.moveToNext());
+        }
+        myDB.close();
+
+        if (records.isEmpty()) records = "User history is empty";
+
+        String style = "<head><style>" +
+                "tr:nth-child(odd) { background-color: #f2f2f2 }" +
+                "td { padding: 5px; }" +
+                "</style> </head>";
+
+        webView.loadData (style + " <table>" + records + "</table>", "text/html", "UTF-8");
+    }
+
+    // Method to update the database with date, time, start station, finish station and response
+
+    public static void updateDB(SQLiteDatabase myDB, File myFile, String myDate, String myTime,
+                                   String myStartStation, String myFinishStation, String myResponse) {
+
+        myDB = SQLiteDatabase.openOrCreateDatabase(myFile + "/myDB.db", null);
+
+        myDB.execSQL("insert into requestHistory values ('" + myDate + "', '" + myTime + "', '" +
+                                myStartStation + "', '" + myFinishStation + "', '" + myResponse + "')");
+        myDB.close();
+    }
+
+    // Method to delete the database data
+
+    public static void deleteDB(SQLiteDatabase myDB, File myFile) {
+
+        myDB = SQLiteDatabase.openOrCreateDatabase(myFile + "/myDB.db", null);
+
+        myDB.execSQL("delete from requestHistory");
+
+        myDB.close();
+    }
 
     public static void showToast(Context context, String message) {
 
@@ -144,5 +225,4 @@ public class Settings {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(title).setMessage(message).setPositiveButton("OK", null).create().show();
     }
-
 }

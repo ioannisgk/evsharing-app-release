@@ -1,26 +1,62 @@
 package com.ioannisgk.evsharingapp;
 
+import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.webkit.WebView;
+import android.widget.Button;
 
 import com.ioannisgk.evsharingapp.utils.Global;
+import com.ioannisgk.evsharingapp.utils.Settings;
+
+import java.io.File;
 
 public class HistoryActivity extends AppCompatActivity {
+    Button backtoProfile;
+    Button deleteHistory;
+    WebView webView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
 
+        // Get activity resources
 
+        backtoProfile = (Button) findViewById(R.id.backButton);
+        deleteHistory = (Button) findViewById(R.id.deleteButton);
+        webView = (WebView) findViewById(R.id.dataWebView);
 
+        // Load information from database and show them to the webview
+        Settings.loadDB(Global.myDB, Global.myFile, webView);
 
+        // Start ProfileActivity when clicking on back to profile
 
+        backtoProfile.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
 
+                Intent i1 = new Intent(HistoryActivity.this, ProfileActivity.class);
+                startActivity(i1);
+            }
+        });
 
+        // Delete user history when clicking on delete history
+
+        deleteHistory.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                // Delete data from database and reload webview
+
+                Settings.deleteDB(Global.myDB, Global.myFile);
+                webView.loadData ("User history is empty", "text/html", "UTF-8");
+                Settings.showToast(getApplicationContext(), "User history is deleted");
+            }
+        });
     }
 
     // Main menu dropdown

@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.icu.text.SimpleDateFormat;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -40,6 +42,7 @@ import org.w3c.dom.NodeList;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -69,6 +72,8 @@ public class RequestActivity extends AppCompatActivity implements AdapterView.On
 
     String startStations[];
     String finishStations[];
+    String selectedStartStationName;
+    String selectedFinishStationName;
 
     // Arrays with ids of stations
 
@@ -109,6 +114,10 @@ public class RequestActivity extends AppCompatActivity implements AdapterView.On
                         if (incomingMessage != null) {
                             if (incomingMessage.equals("Accepted")) {
 
+                                String currentDate = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
+                                Settings.updateDB(Global.myDB, Global.myFile, currentDate, requestTime.getText().toString(),
+                                        selectedStartStationName, selectedFinishStationName, incomingMessage);
+
                                 out.println("bye");
                                 Intent intent = new Intent(RequestActivity.this, AcceptedActivity.class);
                                 startActivity(intent);
@@ -116,12 +125,21 @@ public class RequestActivity extends AppCompatActivity implements AdapterView.On
 
                             } else if (incomingMessage.equals("Denied")) {
 
+                                String currentDate = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
+                                Settings.updateDB(Global.myDB, Global.myFile, currentDate, requestTime.getText().toString(),
+                                        selectedStartStationName, selectedFinishStationName, incomingMessage);
+
                                 out.println("bye");
                                 Intent intent = new Intent(RequestActivity.this, DeniedActivity.class);
                                 startActivity(intent);
                                 finish();
 
                             } else {
+
+                                incomingMessage = "Server error";
+                                String currentDate = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
+                                Settings.updateDB(Global.myDB, Global.myFile, currentDate, requestTime.getText().toString(),
+                                        selectedStartStationName, selectedFinishStationName, incomingMessage);
 
                                 out.println("bye");
                                 Intent intent = new Intent(RequestActivity.this, ErrorActivity.class);
@@ -132,9 +150,7 @@ public class RequestActivity extends AppCompatActivity implements AdapterView.On
                     }
                 } catch (IOException e) {
 
-                    Intent intent = new Intent(RequestActivity.this, ErrorActivity.class);
-                    startActivity(intent);
-                    finish();
+                    e.printStackTrace();
                 }
         }
     }
@@ -192,26 +208,30 @@ public class RequestActivity extends AppCompatActivity implements AdapterView.On
                     // Encrypt message string with text encryptor
 
                     MyTextEncryptor textEncryptor = new MyTextEncryptor();
-                    String encryptedMessage = textEncryptor.encryptPassword(message);
+                    final String encryptedMessage = textEncryptor.encryptPassword(message);
 
-                    // Send the message in a new thread
-
-                    // *** Need to send encrypted message
-
-
-                    // If there is a TCP connection with the server send message else start error activity
+                    // If there is a TCP connection with the server send encrypted message in a new thread
 
                     if (out != null) {
 
                         new Thread() {
                             public void run() {
-                                out.println(message);
+                                out.println(encryptedMessage);
                             }
                         }.start();
 
                     } else {
+
+                        String incomingMessage = "Server offline";
+                        String currentDate = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
+                        String currentTime = new SimpleDateFormat("hh:mm").format(new Date());
+
+                        Settings.updateDB(Global.myDB, Global.myFile, currentDate, requestTime.getText().toString(),
+                                selectedStartStationName, selectedFinishStationName, incomingMessage);
+
                         Intent intent = new Intent(RequestActivity.this, ErrorActivity.class);
                         startActivity(intent);
+                        finish();
                     }
                 }
             }
@@ -307,14 +327,17 @@ public class RequestActivity extends AppCompatActivity implements AdapterView.On
         // Assign names of stations array to start stations spinner
 
         adapterStartStation = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, startStations);
+        adapterStartStation.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         startStationSpinner.setAdapter(adapterStartStation);
         startStationSpinner.setOnItemSelectedListener(this);
 
         // Assign names of stations array to finish stations spinner
 
         adapterFinishStation = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, finishStations);
+        adapterFinishStation.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         finishStationSpinner.setAdapter(adapterFinishStation);
         finishStationSpinner.setOnItemSelectedListener(this);
+
     }
 
     // Change selected stations ids according to spinner value
@@ -325,11 +348,13 @@ public class RequestActivity extends AppCompatActivity implements AdapterView.On
             case R.id.startStationSpinner:
                 index = pos;
                 selectedStartStationID = startStationsIDs[index];
+                selectedStartStationName = startStations[index];
                 break;
 
             case R.id.finishStationSpinner:
                 index = pos;
                 selectedFinishStationID = finishStationsIDs[index];
+                selectedFinishStationName = finishStations[index];
                 break;
         }
     }

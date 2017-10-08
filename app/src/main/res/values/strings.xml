@@ -56,4 +56,9 @@
     <string name="backErrorActivity">Back to Profile</string>
     <string name="historyErrorActivity">User History</string>
 
+    <string name="titleHistoryActivity">User History</string>
+    <string name="infoHistoryActivity">Main actions</string>
+    <string name="backHistoryActivity">Back to Profile</string>
+    <string name="deleteHistoryActivity">Delete History</string>
+
 </resources>
