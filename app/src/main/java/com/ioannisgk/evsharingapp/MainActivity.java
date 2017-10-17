@@ -175,6 +175,10 @@ public class MainActivity extends BaseActivity {
             case android.R.id.home:
                 openDrawer();
                 return true;
+            case R.id.action_settings:
+                Intent i1 = new Intent(this, SettingsActivity.class);
+                startActivity (i1);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }

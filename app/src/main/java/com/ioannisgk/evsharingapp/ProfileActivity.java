@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.icu.text.SimpleDateFormat;
 import android.os.AsyncTask;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.view.Menu;
@@ -32,6 +33,7 @@ import java.text.ParseException;
 import java.util.Date;
 
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class ProfileActivity extends BaseActivity implements AdapterView.OnItemSelectedListener {
     TextView profileMessage;
@@ -293,6 +295,11 @@ public class ProfileActivity extends BaseActivity implements AdapterView.OnItemS
         saveProfile.setEnabled(status);
     }
 
+    @OnClick(R.id.fab)
+    public void onFabClicked(View view) {
+        Snackbar.make(view, "Hello Snackbar!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+    }
+
     private void setupToolbar() {
         final ActionBar ab = getActionBarToolbar();
         ab.setHomeAsUpIndicator(R.drawable.ic_menu_24dp);
@@ -310,6 +317,10 @@ public class ProfileActivity extends BaseActivity implements AdapterView.OnItemS
         switch (item.getItemId()) {
             case android.R.id.home:
                 openDrawer();
+                return true;
+            case R.id.action_settings:
+                Intent i1 = new Intent(this, SettingsActivity.class);
+                startActivity (i1);
                 return true;
         }
         return super.onOptionsItemSelected(item);

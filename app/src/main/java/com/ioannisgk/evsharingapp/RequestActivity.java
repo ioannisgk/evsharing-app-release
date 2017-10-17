@@ -18,9 +18,6 @@ import android.widget.Spinner;
 
 import com.ioannisgk.evsharingapp.base.BaseActivity;
 import com.ioannisgk.evsharingapp.entities.Station;
-import com.ioannisgk.evsharingapp.responses.AcceptedActivity;
-import com.ioannisgk.evsharingapp.responses.DeniedActivity;
-import com.ioannisgk.evsharingapp.responses.ErrorActivity;
 import com.ioannisgk.evsharingapp.utils.AuthTokenInfo;
 import com.ioannisgk.evsharingapp.utils.Global;
 import com.ioannisgk.evsharingapp.utils.MyTextEncryptor;
@@ -90,43 +87,22 @@ public class RequestActivity extends BaseActivity implements AdapterView.OnItemS
                         // Receive message from server
                         String incomingMessage = in.readLine();
 
-                        // Start response activities based on the server response and pass the user object
+                        // Start response activity based on the server response and update the database
 
                         if (incomingMessage != null) {
-                            if (incomingMessage.equals("Accepted")) {
-
-                                String currentDate = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
-                                Settings.updateDB(Global.myDB, Global.myFile, currentDate, requestTime.getText().toString(),
-                                        selectedStartStationName, selectedFinishStationName, incomingMessage);
-
-                                out.println("bye");
-                                Intent intent = new Intent(RequestActivity.this, AcceptedActivity.class);
-                                startActivity(intent);
-                                finish();
-
-                            } else if (incomingMessage.equals("Denied")) {
-
-                                String currentDate = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
-                                Settings.updateDB(Global.myDB, Global.myFile, currentDate, requestTime.getText().toString(),
-                                        selectedStartStationName, selectedFinishStationName, incomingMessage);
-
-                                out.println("bye");
-                                Intent intent = new Intent(RequestActivity.this, DeniedActivity.class);
-                                startActivity(intent);
-                                finish();
-
-                            } else {
-
+                            if ((!incomingMessage.equals("Accepted")) && (!incomingMessage.equals("Denied"))) {
                                 incomingMessage = "Server error";
-                                String currentDate = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
-                                Settings.updateDB(Global.myDB, Global.myFile, currentDate, requestTime.getText().toString(),
-                                        selectedStartStationName, selectedFinishStationName, incomingMessage);
-
-                                out.println("bye");
-                                Intent intent = new Intent(RequestActivity.this, ErrorActivity.class);
-                                startActivity(intent);
-                                finish();
                             }
+
+                            String currentDate = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
+                            Settings.updateDB(Global.myDB, Global.myFile, currentDate, requestTime.getText().toString(),
+                                    selectedStartStationName, selectedFinishStationName, incomingMessage);
+
+                            out.println("bye");
+                            Intent intent = new Intent(RequestActivity.this, ResponseActivity.class);
+                            intent.putExtra("response", incomingMessage);
+                            startActivity(intent);
+                            finish();
                         }
                     }
                 } catch (IOException e) {
@@ -220,7 +196,8 @@ public class RequestActivity extends BaseActivity implements AdapterView.OnItemS
                         Settings.updateDB(Global.myDB, Global.myFile, currentDate, requestTime.getText().toString(),
                                 selectedStartStationName, selectedFinishStationName, incomingMessage);
 
-                        Intent intent = new Intent(RequestActivity.this, ErrorActivity.class);
+                        Intent intent = new Intent(RequestActivity.this, ResponseActivity.class);
+                        intent.putExtra("response", incomingMessage);
                         startActivity(intent);
                         finish();
                     }
@@ -370,6 +347,10 @@ public class RequestActivity extends BaseActivity implements AdapterView.OnItemS
         switch (item.getItemId()) {
             case android.R.id.home:
                 openDrawer();
+                return true;
+            case R.id.action_settings:
+                Intent i1 = new Intent(this, SettingsActivity.class);
+                startActivity (i1);
                 return true;
         }
         return super.onOptionsItemSelected(item);

@@ -1,6 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
@@ -15,74 +16,77 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginTop="20dp"
-        android:text="@string/titleProfileActivity"
+        android:text="@string/titleSettingsActivity"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
-        android:id="@+id/nameTextView"
+        android:id="@+id/statusTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/titleTextView"
         android:layout_marginTop="20dp"
-        android:text="@string/nameProfileActivity"
+        android:text="@string/statusSettingsActivity"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
-    <EditText
-        android:id="@+id/nameEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/nameTextView" />
+    <ImageView
+        android:id="@+id/imageImageView"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_below="@+id/statusTextView"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="20dp"
+        android:contentDescription="@string/app_name"
+        app:srcCompat="@drawable/error_512" />
 
     <TextView
-        android:id="@+id/genderTextView"
+        android:id="@+id/ipaddressTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/nameEditText"
-        android:text="@string/genderProfileActivity"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <Spinner
-        android:id="@+id/genderSpinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/genderTextView"
-        android:layout_marginTop="10dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:id="@+id/dobTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/genderSpinner"
-        android:text="@string/dobProfileActivity"
+        android:layout_below="@+id/imageImageView"
+        android:text="@string/ipaddressSettingsActivity"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <EditText
-        android:id="@+id/dobEditText"
+        android:id="@+id/ipaddressEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/dobTextView"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/ipaddressTextView"
+        android:inputType="number|numberDecimal"
+        android:digits="0123456789."/>
+
+    <TextView
+        android:id="@+id/portnumberTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/ipaddressEditText"
+        android:text="@string/portnumberSettingsActivity"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <EditText
+        android:id="@+id/portnumberEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/portnumberTextView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:inputType="number" />
 
     <TextView
         android:id="@+id/infoTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/dobEditText"
+        android:layout_below="@+id/portnumberEditText"
         android:layout_centerHorizontal="true"
         android:layout_margin="10dp"
-        android:text="@string/infoProfileActivity"
+        android:text="@string/infoSettingsActivity"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <LinearLayout
@@ -100,51 +104,24 @@
             android:layout_marginRight="20dp"
             android:layout_marginEnd="20dp"
             android:layout_weight="1"
-            android:text="@string/switchProfileActivity" />
+            android:text="@string/switchSettingsActivity" />
 
         <Button
             android:id="@+id/saveButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/saveProfileActivity" />
+            android:text="@string/saveSettingsActivity" />
 
     </LinearLayout>
 
     <Button
-        android:id="@+id/requestButton"
+        android:id="@+id/backButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/linearLayout1"
-        android:layout_marginTop="10dp"
-        android:text="@string/requestProfileActivity" />
-
-    <Button
-        android:id="@+id/historyButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/requestButton"
-        android:text="@string/historyProfileActivity" />
-
-    <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/samples_fab"
-        android:layout_width="match_parent"
-        android:layout_height="128dp"
-        android:layout_alignParentBottom="true"
-        android:fitsSystemWindows="true">
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|bottom"
-            android:layout_margin="@dimen/regular_offset"
-            android:src="@drawable/ic_done" />
-
-    </android.support.design.widget.CoordinatorLayout>
+        android:text="@string/backSettingsActivity" />
 
 </RelativeLayout>

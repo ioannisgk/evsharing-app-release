@@ -17,6 +17,7 @@ import com.ioannisgk.evsharingapp.ProfileActivity;
 import com.ioannisgk.evsharingapp.R;
 import com.ioannisgk.evsharingapp.RegisterActivity;
 import com.ioannisgk.evsharingapp.RequestActivity;
+import com.ioannisgk.evsharingapp.SettingsActivity;
 
 // This is the base class for all Activity classes
 // It creates and provides the navigation drawer and toolbar
@@ -105,6 +106,9 @@ public abstract class BaseActivity extends AppCompatActivity {
             case R.id.nav_logout:
                 startActivity(new Intent(this, MainActivity.class));
                 finish();
+                break;
+            case R.id.nav_settings:
+                startActivity(new Intent(this, SettingsActivity.class));
                 break;
         }
     }

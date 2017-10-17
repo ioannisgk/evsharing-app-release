@@ -213,6 +213,10 @@ public class RegisterActivity extends BaseActivity implements AdapterView.OnItem
             case android.R.id.home:
                 openDrawer();
                 return true;
+            case R.id.action_settings:
+                Intent i1 = new Intent(this, SettingsActivity.class);
+                startActivity (i1);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }

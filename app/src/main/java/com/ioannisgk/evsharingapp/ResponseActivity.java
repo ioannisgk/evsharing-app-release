@@ -3,28 +3,41 @@ package com.ioannisgk.evsharingapp;
 import android.content.Intent;
 import android.support.design.widget.NavigationView;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.WebView;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.ioannisgk.evsharingapp.HistoryActivity;
+import com.ioannisgk.evsharingapp.ProfileActivity;
+import com.ioannisgk.evsharingapp.R;
+import com.ioannisgk.evsharingapp.RequestActivity;
 import com.ioannisgk.evsharingapp.base.BaseActivity;
-import com.ioannisgk.evsharingapp.utils.Global;
-import com.ioannisgk.evsharingapp.utils.Settings;
+import com.ioannisgk.evsharingapp.entities.User;
 
 import butterknife.ButterKnife;
 
-public class HistoryActivity extends BaseActivity {
+import static com.ioannisgk.evsharingapp.R.drawable.accepted_512;
+import static com.ioannisgk.evsharingapp.R.drawable.denied_512;
+import static com.ioannisgk.evsharingapp.R.drawable.error_512;
+import static com.ioannisgk.evsharingapp.R.string.nameAcceptedActivity;
+import static com.ioannisgk.evsharingapp.R.string.nameDeniedActivity;
+import static com.ioannisgk.evsharingapp.R.string.nameErrorActivity;
+
+public class ResponseActivity extends BaseActivity {
+    TextView messageText;
+    ImageView imageView;
     Button backtoProfile;
-    Button deleteHistory;
-    WebView webView;
+    Button history;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_history);
+        setContentView(R.layout.activity_response);
 
         // Setup toolbar and hide navigation menu options
 
@@ -38,33 +51,44 @@ public class HistoryActivity extends BaseActivity {
 
         // Get activity resources
 
+        messageText = (TextView) findViewById(R.id.messageTextView);
+        imageView = (ImageView) findViewById(R.id.imageImageView);
         backtoProfile = (Button) findViewById(R.id.backButton);
-        deleteHistory = (Button) findViewById(R.id.deleteButton);
-        webView = (WebView) findViewById(R.id.dataWebView);
+        history = (Button) findViewById(R.id.historyButton);
 
-        // Load information from database and show them to the webview
-        Settings.loadDB(Global.myDB, Global.myFile, webView);
+        // Change response message and image according to server response
+
+        String response = getIntent().getExtras().getString("response");
+
+        if (response.equals("Accepted")) {
+            messageText.setText(nameAcceptedActivity);
+            imageView.setImageResource(accepted_512);
+
+        } else if (response.equals("Denied")) {
+            messageText.setText(nameDeniedActivity);
+            imageView.setImageResource(denied_512);
+
+        } else {
+            messageText.setText(nameErrorActivity);
+            imageView.setImageResource(error_512);
+
+        }
 
         // Start ProfileActivity when clicking on back to profile
 
         backtoProfile.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-
-                Intent i1 = new Intent(HistoryActivity.this, ProfileActivity.class);
+                Intent i1 = new Intent(ResponseActivity.this, ProfileActivity.class);
                 startActivity(i1);
             }
         });
 
-        // Delete user history when clicking on delete history
+        // Start HistoryActivity when clicking on history button
 
-        deleteHistory.setOnClickListener(new View.OnClickListener() {
+        history.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-
-                // Delete data from database and reload webview
-
-                Settings.deleteDB(Global.myDB, Global.myFile);
-                webView.loadData ("User history is empty", "text/html", "UTF-8");
-                Settings.showToast(getApplicationContext(), "User history is deleted");
+                Intent i2 = new Intent(ResponseActivity.this, HistoryActivity.class);
+                startActivity(i2);
             }
         });
     }
@@ -87,17 +111,13 @@ public class HistoryActivity extends BaseActivity {
             case android.R.id.home:
                 openDrawer();
                 return true;
-            case R.id.action_settings:
-                Intent i1 = new Intent(this, SettingsActivity.class);
-                startActivity (i1);
-                return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     protected int getSelfNavDrawerItem() {
-        return R.id.nav_history;
+        return R.id.nav_main;
     }
 
     @Override
