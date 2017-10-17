@@ -4,7 +4,8 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.icu.text.SimpleDateFormat;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
+import android.support.design.widget.NavigationView;
+import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import com.ioannisgk.evsharingapp.base.BaseActivity;
 import com.ioannisgk.evsharingapp.entities.User;
 import com.ioannisgk.evsharingapp.utils.AuthTokenInfo;
 import com.ioannisgk.evsharingapp.utils.DateDialog;
@@ -23,12 +25,11 @@ import com.ioannisgk.evsharingapp.utils.SpringRestClient;
 import com.ioannisgk.evsharingapp.utils.MyTextEncryptor;
 
 import java.text.ParseException;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-public class RegisterActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+import butterknife.ButterKnife;
+
+public class RegisterActivity extends BaseActivity implements AdapterView.OnItemSelectedListener {
     EditText regName;
     EditText regDate;
     EditText regUsername;
@@ -42,10 +43,17 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        // Add icon to action bar
+        // Setup toolbar and hide navigation menu options
 
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setIcon(R.drawable.logo_32x32);
+        ButterKnife.bind(this);
+        setupToolbar();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        Menu navigationMenu = navigationView.getMenu();
+        navigationMenu.findItem(R.id.nav_profile).setVisible(false);
+        navigationMenu.findItem(R.id.nav_request).setVisible(false);
+        navigationMenu.findItem(R.id.nav_history).setVisible(false);
+        navigationMenu.findItem(R.id.nav_logout).setVisible(false);
 
         // Get activity resources
 
@@ -184,38 +192,38 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
         }
     }
 
-    // Method needed for dropdown list
-
     public void onNothingSelected(AdapterView<?> parent) {
-
     }
 
-    // Main menu dropdown
+    private void setupToolbar() {
+        final ActionBar ab = getActionBarToolbar();
+        ab.setHomeAsUpIndicator(R.drawable.ic_menu_24dp);
+        ab.setDisplayHomeAsUpEnabled(true);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu (menu);
-        MenuItem item1 = menu.add(0, 0, Menu.NONE, "User login");
-        MenuItem item2 = menu.add(0, 1, Menu.NONE, "About us");
+        getMenuInflater().inflate(R.menu.settings_view, menu);
         return true;
     }
 
-    // Start new activity depending main menu on selection
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId())
-        {
-            case 0:
-                Intent i1 = new Intent(this, MainActivity.class);
-                startActivity (i1);
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                openDrawer();
                 return true;
-            case 1:
-                Intent i2 = new Intent(this, AboutActivity.class);
-                startActivity (i2);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
         }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected int getSelfNavDrawerItem() {
+        return R.id.nav_register;
+    }
+
+    @Override
+    public boolean providesActivityToolbar() {
+        return true;
     }
 }

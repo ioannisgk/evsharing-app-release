@@ -3,13 +3,15 @@ package com.ioannisgk.evsharingapp;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+import android.support.design.widget.NavigationView;
+import android.support.v7.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
+
+import com.ioannisgk.evsharingapp.base.BaseActivity;
 import com.ioannisgk.evsharingapp.entities.User;
 import com.ioannisgk.evsharingapp.utils.AuthTokenInfo;
 import com.ioannisgk.evsharingapp.utils.Global;
@@ -19,17 +21,26 @@ import com.ioannisgk.evsharingapp.utils.SpringRestClient;
 
 import java.io.File;
 
-public class MainActivity extends AppCompatActivity {
+import butterknife.ButterKnife;
+
+public class MainActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Add icon to action bar
+        // Setup toolbar and hide navigation menu options
 
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setIcon(R.drawable.logo_32x32);
+        ButterKnife.bind(this);
+        setupToolbar();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        Menu navigationMenu = navigationView.getMenu();
+        navigationMenu.findItem(R.id.nav_profile).setVisible(false);
+        navigationMenu.findItem(R.id.nav_request).setVisible(false);
+        navigationMenu.findItem(R.id.nav_history).setVisible(false);
+        navigationMenu.findItem(R.id.nav_logout).setVisible(false);
 
         // Get activity resources
 
@@ -146,31 +157,35 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // Main menu dropdown
+    private void setupToolbar() {
+        final ActionBar ab = getActionBarToolbar();
+        ab.setHomeAsUpIndicator(R.drawable.ic_menu_24dp);
+        ab.setDisplayHomeAsUpEnabled(true);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu (menu);
-        MenuItem item1 = menu.add(0, 0, Menu.NONE, "User registration");
-        MenuItem item2 = menu.add(0, 1, Menu.NONE, "About us");
+        getMenuInflater().inflate(R.menu.settings_view, menu);
         return true;
     }
-
-    // Start new activity depending main menu on selection
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case 0:
-                Intent i1 = new Intent(this, RegisterActivity.class);
-                startActivity (i1);
+            case android.R.id.home:
+                openDrawer();
                 return true;
-            case 1:
-                Intent i2 = new Intent(this, AboutActivity.class);
-                startActivity (i2);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
         }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected int getSelfNavDrawerItem() {
+        return R.id.nav_main;
+    }
+
+    @Override
+    public boolean providesActivityToolbar() {
+        return true;
     }
 }

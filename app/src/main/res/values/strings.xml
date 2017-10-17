@@ -1,7 +1,18 @@
 <resources>
-    <string name="app_name">\u0020 Sharing App</string>
+    <string name="app_name">EV Sharing App</string>
     <string name="action_settings">Main Menu</string>
     <string name="titleAboutActivity">About us</string>
+
+    <string name="loginNavigationMenu">Login Now</string>
+    <string name="registerNavigationMenu">Register</string>
+    <string name="profileNavigationMenu">My profile</string>
+    <string name="requestNavigationMenu">Request Vehicle</string>
+    <string name="historyNavigationMenu">User History</string>
+    <string name="aboutNavigationMenu">About Us</string>
+    <string name="logoutNavigationMenu">Logout</string>
+    <string name="titleNavigationMenu">MAIN NAVIGATION</string>
+    <string name="subitemsNavigationMenu">More</string>
+    <string name="settings">Settings</string>
 
     <string name="titleMainActivity">User login</string>
     <string name="usernameMainActivity">Username</string>

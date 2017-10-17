@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-
     <item android:drawable="@color/colorWhite" />
 
     <item>
-        <bitmap android:src="@drawable/logo_300x300"
+        <bitmap android:src="@drawable/logo_splash_300x300"
             android:gravity="center" />
     </item>
-
 </layer-list>

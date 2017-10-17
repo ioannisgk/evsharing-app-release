@@ -2,11 +2,10 @@ package com.ioannisgk.evsharingapp;
 
 import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.icu.text.DateFormat;
 import android.icu.text.SimpleDateFormat;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
+import android.support.design.widget.NavigationView;
+import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,23 +19,21 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.ioannisgk.evsharingapp.base.BaseActivity;
 import com.ioannisgk.evsharingapp.entities.User;
 import com.ioannisgk.evsharingapp.utils.AuthTokenInfo;
 import com.ioannisgk.evsharingapp.utils.DateDialog;
 import com.ioannisgk.evsharingapp.utils.Global;
-import com.ioannisgk.evsharingapp.utils.MyTextEncryptor;
 import com.ioannisgk.evsharingapp.utils.Settings;
 import com.ioannisgk.evsharingapp.utils.SpringRestClient;
 
 import java.text.ParseException;
 import java.util.Date;
-import java.util.Locale;
 
-import static android.R.attr.type;
+import butterknife.ButterKnife;
 
-public class ProfileActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class ProfileActivity extends BaseActivity implements AdapterView.OnItemSelectedListener {
     TextView profileMessage;
     EditText profileName;
     EditText profileDate;
@@ -52,10 +49,15 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        // Add icon to action bar
+        // Setup toolbar and hide navigation menu options
 
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setIcon(R.drawable.logo_32x32);
+        ButterKnife.bind(this);
+        setupToolbar();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        Menu navigationMenu = navigationView.getMenu();
+        navigationMenu.findItem(R.id.nav_main).setVisible(false);
+        navigationMenu.findItem(R.id.nav_register).setVisible(false);
 
         // Get activity resources
 
@@ -291,44 +293,35 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
         saveProfile.setEnabled(status);
     }
 
-    // Main menu dropdown
+    private void setupToolbar() {
+        final ActionBar ab = getActionBarToolbar();
+        ab.setHomeAsUpIndicator(R.drawable.ic_menu_24dp);
+        ab.setDisplayHomeAsUpEnabled(true);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu (menu);
-        MenuItem item1 = menu.add(0, 0, Menu.NONE, "Request");
-        MenuItem item2 = menu.add(0, 1, Menu.NONE, "History");
-        MenuItem item3 = menu.add(0, 2, Menu.NONE, "About us");
-        MenuItem item4 = menu.add(0, 3, Menu.NONE, "Logout");
+        getMenuInflater().inflate(R.menu.settings_view, menu);
         return true;
     }
 
-    // Start new activity depending main menu on selection
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId())
-        {
-            case 0:
-                Intent i1 = new Intent(this, RequestActivity.class);
-                startActivity (i1);
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                openDrawer();
                 return true;
-            case 1:
-                Intent i2 = new Intent(this, HistoryActivity.class);
-                startActivity (i2);
-                return true;
-            case 2:
-                Intent i3 = new Intent(this, AboutActivity.class);
-                startActivity (i3);
-                return true;
-            case 3:
-                Global.currentUser = null;
-                Intent i4 = new Intent(this, MainActivity.class);
-                startActivity (i4);
-                finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
         }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected int getSelfNavDrawerItem() {
+        return R.id.nav_profile;
+    }
+
+    @Override
+    public boolean providesActivityToolbar() {
+        return true;
     }
 }

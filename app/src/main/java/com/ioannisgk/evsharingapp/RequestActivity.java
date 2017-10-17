@@ -1,14 +1,11 @@
 package com.ioannisgk.evsharingapp;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.icu.text.SimpleDateFormat;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
+import android.support.design.widget.NavigationView;
+import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,47 +14,31 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioButton;
 import android.widget.Spinner;
-import android.widget.Switch;
-import android.widget.TextView;
 
+import com.ioannisgk.evsharingapp.base.BaseActivity;
 import com.ioannisgk.evsharingapp.entities.Station;
-import com.ioannisgk.evsharingapp.entities.User;
 import com.ioannisgk.evsharingapp.responses.AcceptedActivity;
 import com.ioannisgk.evsharingapp.responses.DeniedActivity;
 import com.ioannisgk.evsharingapp.responses.ErrorActivity;
 import com.ioannisgk.evsharingapp.utils.AuthTokenInfo;
-import com.ioannisgk.evsharingapp.utils.DateDialog;
 import com.ioannisgk.evsharingapp.utils.Global;
 import com.ioannisgk.evsharingapp.utils.MyTextEncryptor;
 import com.ioannisgk.evsharingapp.utils.Settings;
 import com.ioannisgk.evsharingapp.utils.SpringRestClient;
 import com.ioannisgk.evsharingapp.utils.TimeDialog;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.net.URL;
-import java.net.URLConnection;
-import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
+import butterknife.ButterKnife;
 
-public class RequestActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class RequestActivity extends BaseActivity implements AdapterView.OnItemSelectedListener {
     EditText profileName;
     EditText requestTime;
     Button sendRequest;
@@ -160,10 +141,15 @@ public class RequestActivity extends AppCompatActivity implements AdapterView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_request);
 
-        // Add icon to action bar
+        // Setup toolbar and hide navigation menu options
 
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setIcon(R.drawable.logo_32x32);
+        ButterKnife.bind(this);
+        setupToolbar();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        Menu navigationMenu = navigationView.getMenu();
+        navigationMenu.findItem(R.id.nav_main).setVisible(false);
+        navigationMenu.findItem(R.id.nav_register).setVisible(false);
 
         // Get activity resources
 
@@ -364,50 +350,38 @@ public class RequestActivity extends AppCompatActivity implements AdapterView.On
         }
     }
 
-    // Method needed for dropdown list
-
     public void onNothingSelected(AdapterView<?> parent) {
-
     }
 
-    // Main menu dropdown
+    private void setupToolbar() {
+        final ActionBar ab = getActionBarToolbar();
+        ab.setHomeAsUpIndicator(R.drawable.ic_menu_24dp);
+        ab.setDisplayHomeAsUpEnabled(true);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu (menu);
-        MenuItem item1 = menu.add(0, 0, Menu.NONE, "Profile");
-        MenuItem item2 = menu.add(0, 1, Menu.NONE, "History");
-        MenuItem item3 = menu.add(0, 2, Menu.NONE, "About us");
-        MenuItem item4 = menu.add(0, 3, Menu.NONE, "Logout");
+        getMenuInflater().inflate(R.menu.settings_view, menu);
         return true;
     }
 
-    // Start new activity depending main menu on selection
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId())
-        {
-            case 0:
-                Intent i1 = new Intent(this, ProfileActivity.class);
-                startActivity (i1);
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                openDrawer();
                 return true;
-            case 1:
-                Intent i2 = new Intent(this, HistoryActivity.class);
-                startActivity (i2);
-                return true;
-            case 2:
-                Intent i3 = new Intent(this, AboutActivity.class);
-                startActivity (i3);
-                return true;
-            case 3:
-                Global.currentUser = null;
-                Intent i4 = new Intent(this, MainActivity.class);
-                startActivity (i4);
-                finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
         }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected int getSelfNavDrawerItem() {
+        return R.id.nav_request;
+    }
+
+    @Override
+    public boolean providesActivityToolbar() {
+        return true;
     }
 }

@@ -1,24 +1,24 @@
 package com.ioannisgk.evsharingapp;
 
-import android.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.TextView;
 import java.io.IOException;
 import java.io.InputStream;
+
+import com.ioannisgk.evsharingapp.base.BaseActivity;
 import com.ioannisgk.evsharingapp.utils.Settings;
 
-public class AboutActivity extends AppCompatActivity {
+import butterknife.ButterKnife;
+
+public class AboutActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
-
-        // Add icon to action bar
-
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setIcon(R.drawable.logo_32x32);
+        ButterKnife.bind(this);
 
         // Get activity resources
         final TextView aboutText = (TextView) findViewById(R.id.fileTextView);
@@ -50,5 +50,31 @@ public class AboutActivity extends AppCompatActivity {
 
         text = new String(buffer);
         aboutText.setText(text);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.settings_view, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                openDrawer();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected int getSelfNavDrawerItem() {
+        return R.id.nav_about;
+    }
+
+    @Override
+    public boolean providesActivityToolbar() {
+        return true;
     }
 }
