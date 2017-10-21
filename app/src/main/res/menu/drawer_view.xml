@@ -3,27 +3,27 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_main"
-            android:icon="@drawable/ic_android_black_24dp"
+            android:icon="@drawable/ic_main_24dp"
             android:title="@string/loginNavigationMenu" />
         <item
             android:id="@+id/nav_register"
-            android:icon="@drawable/ic_android_black_24dp"
+            android:icon="@drawable/ic_register_24dp"
             android:title="@string/registerNavigationMenu" />
         <item
             android:id="@+id/nav_profile"
-            android:icon="@drawable/ic_android_black_24dp"
+            android:icon="@drawable/ic_profile_24dp"
             android:title="@string/profileNavigationMenu" />
         <item
             android:id="@+id/nav_request"
-            android:icon="@drawable/ic_android_black_24dp"
+            android:icon="@drawable/ic_car_black_24dp"
             android:title="@string/requestNavigationMenu" />
         <item
             android:id="@+id/nav_history"
-            android:icon="@drawable/ic_android_black_24dp"
+            android:icon="@drawable/ic_history_24dp"
             android:title="@string/historyNavigationMenu" />
         <item
             android:id="@+id/nav_settings"
-            android:icon="@drawable/ic_android_black_24dp"
+            android:icon="@drawable/ic_settings_24dp"
             android:title="@string/settingsNavigationMenu" />
     </group>
 
@@ -31,11 +31,11 @@
         <menu>
             <item
                 android:id="@+id/nav_about"
-                android:icon="@drawable/ic_android_black_24dp"
+                android:icon="@drawable/ic_about_24dp"
                 android:title="@string/aboutNavigationMenu" />
             <item
                 android:id="@+id/nav_logout"
-                android:icon="@drawable/ic_android_black_24dp"
+                android:icon="@drawable/ic_logout_24dp"
                 android:title="@string/logoutNavigationMenu" />
         </menu>
     </item>

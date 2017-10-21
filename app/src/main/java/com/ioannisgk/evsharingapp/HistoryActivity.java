@@ -43,7 +43,7 @@ public class HistoryActivity extends BaseActivity {
         webView = (WebView) findViewById(R.id.dataWebView);
 
         // Load information from database and show them to the webview
-        Settings.loadDB(Global.myDB, Global.myFile, webView);
+        Settings.loadDB(Global.myDB, Global.databaseFile, webView);
 
         // Start ProfileActivity when clicking on back to profile
 
@@ -62,7 +62,7 @@ public class HistoryActivity extends BaseActivity {
 
                 // Delete data from database and reload webview
 
-                Settings.deleteDB(Global.myDB, Global.myFile);
+                Settings.deleteDB(Global.myDB, Global.databaseFile);
                 webView.loadData ("User history is empty", "text/html", "UTF-8");
                 Settings.showToast(getApplicationContext(), "User history is deleted");
             }
@@ -77,7 +77,7 @@ public class HistoryActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.settings_view, menu);
+        getMenuInflater().inflate(R.menu.about_view, menu);
         return true;
     }
 
@@ -87,8 +87,8 @@ public class HistoryActivity extends BaseActivity {
             case android.R.id.home:
                 openDrawer();
                 return true;
-            case R.id.action_settings:
-                Intent i1 = new Intent(this, SettingsActivity.class);
+            case R.id.action_about:
+                Intent i1 = new Intent(this, AboutActivity.class);
                 startActivity (i1);
                 return true;
         }

@@ -1,5 +1,7 @@
 package com.ioannisgk.evsharingapp;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.content.Intent;
@@ -20,10 +22,16 @@ import com.ioannisgk.evsharingapp.utils.Settings;
 import com.ioannisgk.evsharingapp.utils.SpringRestClient;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import butterknife.ButterKnife;
 
 public class MainActivity extends BaseActivity {
+
+    // Shared preferences for saving/loading settings
+    SharedPreferences sharedpreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,11 +57,17 @@ public class MainActivity extends BaseActivity {
         final Button login = (Button) findViewById(R.id.loginButton);
         final Button register = (Button) findViewById(R.id.registerButton);
 
+        // Load settings values from shared preferences
+
+        sharedpreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        Global.ipAddress = sharedpreferences.getString("ipAddress", "178.62.121.237");
+        Global.portNumber = Integer.parseInt(sharedpreferences.getString("portNumber", "8080"));
+
         // Get file directory and create or load database with user data
 
         File myFile = getFilesDir();
-        Global.myFile = myFile;
-        Global.myDB = Settings.createDB(Global.myDB, Global.myFile);
+        Global.databaseFile = myFile;
+        Global.myDB = Settings.createDB(Global.myDB, Global.databaseFile);
 
         // Start RegisterActivity when clicking on Register
 
@@ -165,7 +179,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.settings_view, menu);
+        getMenuInflater().inflate(R.menu.about_view, menu);
         return true;
     }
 
@@ -175,8 +189,8 @@ public class MainActivity extends BaseActivity {
             case android.R.id.home:
                 openDrawer();
                 return true;
-            case R.id.action_settings:
-                Intent i1 = new Intent(this, SettingsActivity.class);
+            case R.id.action_about:
+                Intent i1 = new Intent(this, AboutActivity.class);
                 startActivity (i1);
                 return true;
         }

@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.NetworkOnMainThreadException;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
@@ -16,6 +17,8 @@ import com.ioannisgk.evsharingapp.RegisterActivity;
 import com.ioannisgk.evsharingapp.RequestActivity;
 
 import java.io.File;
+import java.net.Inet4Address;
+import java.net.UnknownHostException;
 import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -210,6 +213,46 @@ public class Settings {
             showDialogBox("Request error", "Latest time is 22:00", context);
             return false;
 
+        }
+        return true;
+    }
+
+    // Validate input data from the settings form
+
+    public static boolean validateSettingsData(String ipAddress, String portNumber, Context context) {
+
+        if (portNumber.isEmpty() || ipAddress.isEmpty()) {
+            showDialogBox("Settings error", "Empty fields detected", context);
+            return false;
+
+        } else if (!portNumber.matches("-?\\d+(\\.\\d+)?")) {
+            showDialogBox("Settings error", "Invalid characters detected", context);
+            return false;
+
+        } else if (Integer.parseInt(portNumber) > 65535) {
+            showDialogBox("Settings error", "Port number is not valid", context);
+            return false;
+
+        } else {
+            try {
+                Inet4Address address = (Inet4Address) Inet4Address.getByName(ipAddress);
+            } catch (NetworkOnMainThreadException e) {
+
+                showDialogBox("Settings error", "IP address is not valid", context);
+                return false;
+
+            } catch (UnknownHostException e) {
+                showDialogBox("Settings error", "IP address is not valid", context);
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean containsOnlyNumbers(String str) {
+        for (int i = 0; i < str.length(); i++) {
+            if (!Character.isDigit(str.charAt(i)))
+                return false;
         }
         return true;
     }

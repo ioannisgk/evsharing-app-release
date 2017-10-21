@@ -54,7 +54,6 @@ public class AboutActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.settings_view, menu);
         return true;
     }
 

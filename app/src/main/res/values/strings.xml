@@ -14,6 +14,7 @@
     <string name="settingsNavigationMenu">Settings</string>
     <string name="subitemsNavigationMenu">More</string>
     <string name="settings">Settings</string>
+    <string name="about">About Us</string>
 
     <string name="titleMainActivity">User login</string>
     <string name="usernameMainActivity">Username</string>
@@ -74,12 +75,15 @@
     <string name="deleteHistoryActivity">Delete History</string>
 
     <string name="titleSettingsActivity">Settings</string>
-    <string name="statusSettingsActivity">Server Status</string>
+    <string name="statusSettingsActivity">Service Status</string>
     <string name="ipaddressSettingsActivity">IP Address</string>
     <string name="portnumberSettingsActivity">Port Number</string>
     <string name="infoSettingsActivity">Main actions</string>
     <string name="switchSettingsActivity">Edit mode disabled</string>
+    <string name="defaultsSettingsActivity">Load Defaults</string>
     <string name="saveSettingsActivity">Save Settings</string>
     <string name="backSettingsActivity">Back to Profile</string>
+    <string name="onlineSettingsActivity">Service Status: ONLINE</string>
+    <string name="offlineSettingsActivity">Service Status: OFFLINE</string>
 
 </resources>

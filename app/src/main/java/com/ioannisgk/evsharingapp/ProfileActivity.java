@@ -308,7 +308,7 @@ public class ProfileActivity extends BaseActivity implements AdapterView.OnItemS
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.settings_view, menu);
+        getMenuInflater().inflate(R.menu.about_view, menu);
         return true;
     }
 
@@ -318,8 +318,8 @@ public class ProfileActivity extends BaseActivity implements AdapterView.OnItemS
             case android.R.id.home:
                 openDrawer();
                 return true;
-            case R.id.action_settings:
-                Intent i1 = new Intent(this, SettingsActivity.class);
+            case R.id.action_about:
+                Intent i1 = new Intent(this, AboutActivity.class);
                 startActivity (i1);
                 return true;
         }

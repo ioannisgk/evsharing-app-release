@@ -67,8 +67,6 @@ public class RequestActivity extends BaseActivity implements AdapterView.OnItemS
     public Socket sender;
     public PrintWriter out;
     public BufferedReader in;
-    String ipAddress = "178.62.121.237";
-    int portNumber = 5566;
 
     // Listener for TCP message
 
@@ -78,7 +76,7 @@ public class RequestActivity extends BaseActivity implements AdapterView.OnItemS
 
                 try {
 
-                    sender = new Socket(ipAddress, portNumber);
+                    sender = new Socket(Global.ipAddress, Global.portNumber);
                     out = new PrintWriter(sender.getOutputStream(), true);
                     in = new BufferedReader(new InputStreamReader(sender.getInputStream()));
 
@@ -95,7 +93,7 @@ public class RequestActivity extends BaseActivity implements AdapterView.OnItemS
                             }
 
                             String currentDate = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
-                            Settings.updateDB(Global.myDB, Global.myFile, currentDate, requestTime.getText().toString(),
+                            Settings.updateDB(Global.myDB, Global.databaseFile, currentDate, requestTime.getText().toString(),
                                     selectedStartStationName, selectedFinishStationName, incomingMessage);
 
                             out.println("bye");
@@ -193,7 +191,7 @@ public class RequestActivity extends BaseActivity implements AdapterView.OnItemS
                         String currentDate = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
                         String currentTime = new SimpleDateFormat("hh:mm").format(new Date());
 
-                        Settings.updateDB(Global.myDB, Global.myFile, currentDate, requestTime.getText().toString(),
+                        Settings.updateDB(Global.myDB, Global.databaseFile, currentDate, requestTime.getText().toString(),
                                 selectedStartStationName, selectedFinishStationName, incomingMessage);
 
                         Intent intent = new Intent(RequestActivity.this, ResponseActivity.class);
@@ -338,7 +336,7 @@ public class RequestActivity extends BaseActivity implements AdapterView.OnItemS
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.settings_view, menu);
+        getMenuInflater().inflate(R.menu.about_view, menu);
         return true;
     }
 
@@ -348,8 +346,8 @@ public class RequestActivity extends BaseActivity implements AdapterView.OnItemS
             case android.R.id.home:
                 openDrawer();
                 return true;
-            case R.id.action_settings:
-                Intent i1 = new Intent(this, SettingsActivity.class);
+            case R.id.action_about:
+                Intent i1 = new Intent(this, AboutActivity.class);
                 startActivity (i1);
                 return true;
         }

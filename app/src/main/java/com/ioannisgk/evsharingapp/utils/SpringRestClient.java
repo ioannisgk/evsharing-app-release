@@ -26,8 +26,8 @@ import org.springframework.web.client.RestTemplate;
 
 public class SpringRestClient {
 
-    public static final String REST_SERVICE_URI = "http://178.62.121.237:8080/evsharing-platform/api";
-    public static final String AUTH_SERVER_URI = "http://178.62.121.237:8080/evsharing-platform/oauth/token";
+    public static String REST_SERVICE_URI = "http://" + Global.ipAddress + ":" + Global.portNumber + "/evsharing-platform/api";
+    public static String AUTH_SERVER_URI = "http://" + Global.ipAddress + ":" + Global.portNumber + "/evsharing-platform/oauth/token";
     public static final String QPM_PASSWORD_GRANT = "?grant_type=password&username=evsharingUser&password=evsharingPass";
     public static final String QPM_ACCESS_TOKEN = "?access_token=";
 
@@ -39,6 +39,9 @@ public class SpringRestClient {
     // Prepare HTTP headers
 
     private static HttpHeaders getHeaders(){
+
+        REST_SERVICE_URI = "http://" + Global.ipAddress + ":" + Global.portNumber + "/evsharing-platform/api";
+        AUTH_SERVER_URI = "http://" + Global.ipAddress + ":" + Global.portNumber + "/evsharing-platform/oauth/token";
 
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
