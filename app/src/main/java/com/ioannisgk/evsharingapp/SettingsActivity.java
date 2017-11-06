@@ -111,6 +111,7 @@ public class SettingsActivity extends BaseActivity {
             navigationMenu.findItem(R.id.nav_main).setVisible(false);
             navigationMenu.findItem(R.id.nav_register).setVisible(false);
         } else {
+            navigationMenu.findItem(R.id.nav_map).setVisible(false);
             navigationMenu.findItem(R.id.nav_profile).setVisible(false);
             navigationMenu.findItem(R.id.nav_request).setVisible(false);
             navigationMenu.findItem(R.id.nav_history).setVisible(false);
@@ -321,7 +322,7 @@ public class SettingsActivity extends BaseActivity {
 
     @Override
     protected int getSelfNavDrawerItem() {
-        return R.id.nav_settings;
+        return R.id.nav_map;
     }
 
     @Override

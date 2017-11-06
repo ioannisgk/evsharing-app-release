@@ -1,7 +1,9 @@
 package com.ioannisgk.evsharingapp;
 
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.icu.text.SimpleDateFormat;
 import android.os.AsyncTask;
 import android.support.design.widget.NavigationView;
@@ -34,8 +36,13 @@ import java.util.Date;
 import java.util.List;
 
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class RequestActivity extends BaseActivity implements AdapterView.OnItemSelectedListener {
+
+    // Shared preferences for saving/loading settings
+    SharedPreferences sharedpreferences;
+
     EditText profileName;
     EditText requestTime;
     Button sendRequest;
@@ -61,6 +68,8 @@ public class RequestActivity extends BaseActivity implements AdapterView.OnItemS
     int index = 0;
     int selectedStartStationID;
     int selectedFinishStationID;
+    int startStationID;
+    int finishStationID;
 
     // Attributes for TCP connection
 
@@ -136,6 +145,24 @@ public class RequestActivity extends BaseActivity implements AdapterView.OnItemS
 
         // Display current username
         profileName.setText(Global.currentUser.getUsername());
+
+        // selected stations ids from shared preferences
+
+        sharedpreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        startStationID = Integer.parseInt(sharedpreferences.getString("startStationID", "0"));
+        finishStationID = Integer.parseInt(sharedpreferences.getString("finishStationID", "0"));
+
+        // Set station spinners to values selected from Maps Activity
+
+        startStationSpinner.setSelection(startStationID);
+        finishStationSpinner.setSelection(finishStationID);
+
+        System.out.println("----IDs:" + startStationID);
+        System.out.println("----IDs:" + finishStationID);
+
+
+
+
 
         // Execute async task to get station objects
         new HttpRequestTask().execute();
@@ -260,7 +287,7 @@ public class RequestActivity extends BaseActivity implements AdapterView.OnItemS
 
                     // Iterate list and populate arrays
 
-                    for (int i = 0; i < theStations.size(); ++i) {
+                    for (int i = 0; i < theStations.size(); i++) {
 
                         // Arrays of names of stations
 
@@ -326,6 +353,11 @@ public class RequestActivity extends BaseActivity implements AdapterView.OnItemS
     }
 
     public void onNothingSelected(AdapterView<?> parent) {
+    }
+
+    @OnClick(R.id.fab)
+    public void onFabClicked(View view) {
+        startActivity(new Intent(this, MapActivity.class));
     }
 
     private void setupToolbar() {

@@ -3,6 +3,9 @@
     package="com.ioannisgk.evsharingapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
         android:allowBackup="true"
@@ -11,6 +14,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyD9Q-ESeWiREzVIjvohMwVaeHrM04Uk9UQ"/>
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
         <activity
             android:name=".SplashActivity"
             android:theme="@style/SplashTheme">
@@ -26,11 +38,9 @@
         <activity android:name=".AboutActivity" />
         <activity android:name=".RequestActivity" />
         <activity android:name=".HistoryActivity" />
-        <activity android:name=".responses.AcceptedActivity" />
-        <activity android:name=".responses.DeniedActivity" />
-        <activity android:name=".responses.ErrorActivity" />
         <activity android:name=".SettingsActivity" />
-        <activity android:name=".ResponseActivity"></activity>
+        <activity android:name=".ResponseActivity" />
+        <activity android:name=".MapActivity"></activity>
     </application>
 
 </manifest>

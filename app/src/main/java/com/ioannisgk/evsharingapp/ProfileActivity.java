@@ -97,11 +97,11 @@ public class ProfileActivity extends BaseActivity implements AdapterView.OnItemS
         // Make profile fields inactive and not editable
         alterProfileControls(false);
 
-        // Start RequestActivity when clicking on request button
+        // Start MapActivity when clicking on request button
 
         request.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent i1 = new Intent(ProfileActivity.this, RequestActivity.class);
+                Intent i1 = new Intent(ProfileActivity.this, MapActivity.class);
                 startActivity(i1);
             }
         });
@@ -297,7 +297,7 @@ public class ProfileActivity extends BaseActivity implements AdapterView.OnItemS
 
     @OnClick(R.id.fab)
     public void onFabClicked(View view) {
-        Snackbar.make(view, "Hello Snackbar!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+        startActivity(new Intent(this, MapActivity.class));
     }
 
     private void setupToolbar() {

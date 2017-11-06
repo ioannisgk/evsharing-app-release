@@ -50,6 +50,7 @@ public class RegisterActivity extends BaseActivity implements AdapterView.OnItem
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         Menu navigationMenu = navigationView.getMenu();
+        navigationMenu.findItem(R.id.nav_map).setVisible(false);
         navigationMenu.findItem(R.id.nav_profile).setVisible(false);
         navigationMenu.findItem(R.id.nav_request).setVisible(false);
         navigationMenu.findItem(R.id.nav_history).setVisible(false);

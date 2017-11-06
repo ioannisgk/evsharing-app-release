@@ -6,6 +6,7 @@
     <string name="loginNavigationMenu">Login Now</string>
     <string name="registerNavigationMenu">Register</string>
     <string name="profileNavigationMenu">My profile</string>
+    <string name="mapNavigationMenu">Open Map</string>
     <string name="requestNavigationMenu">Request Vehicle</string>
     <string name="historyNavigationMenu">User History</string>
     <string name="aboutNavigationMenu">About Us</string>
@@ -85,5 +86,8 @@
     <string name="backSettingsActivity">Back to Profile</string>
     <string name="onlineSettingsActivity">Service Status: ONLINE</string>
     <string name="offlineSettingsActivity">Service Status: OFFLINE</string>
+
+    <string name="infoMapActivity">Info: Tap on two stations and click on the car icon</string>
+    <string name="google_maps_API_key">AIzaSyD9Q-ESeWiREzVIjvohMwVaeHrM04Uk9UQ</string>
 
 </resources>

@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import com.ioannisgk.evsharingapp.AboutActivity;
 import com.ioannisgk.evsharingapp.HistoryActivity;
 import com.ioannisgk.evsharingapp.MainActivity;
+import com.ioannisgk.evsharingapp.MapActivity;
 import com.ioannisgk.evsharingapp.ProfileActivity;
 import com.ioannisgk.evsharingapp.R;
 import com.ioannisgk.evsharingapp.RegisterActivity;
@@ -91,6 +92,9 @@ public abstract class BaseActivity extends AppCompatActivity {
                 break;
             case R.id.nav_register:
                 startActivity(new Intent(this, RegisterActivity.class));
+                break;
+            case R.id.nav_map:
+                startActivity(new Intent(this, MapActivity.class));
                 break;
             case R.id.nav_profile:
                 startActivity(new Intent(this, ProfileActivity.class));
