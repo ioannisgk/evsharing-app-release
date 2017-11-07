@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -62,8 +63,8 @@ public class RequestActivity extends BaseActivity implements AdapterView.OnItemS
 
     // Arrays with ids of stations
 
-    int startStationsIDs[];
-    int finishStationsIDs[];
+    Integer startStationsIDs[];
+    Integer finishStationsIDs[];
 
     int index = 0;
     int selectedStartStationID;
@@ -145,24 +146,6 @@ public class RequestActivity extends BaseActivity implements AdapterView.OnItemS
 
         // Display current username
         profileName.setText(Global.currentUser.getUsername());
-
-        // selected stations ids from shared preferences
-
-        sharedpreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-        startStationID = Integer.parseInt(sharedpreferences.getString("startStationID", "0"));
-        finishStationID = Integer.parseInt(sharedpreferences.getString("finishStationID", "0"));
-
-        // Set station spinners to values selected from Maps Activity
-
-        startStationSpinner.setSelection(startStationID);
-        finishStationSpinner.setSelection(finishStationID);
-
-        System.out.println("----IDs:" + startStationID);
-        System.out.println("----IDs:" + finishStationID);
-
-
-
-
 
         // Execute async task to get station objects
         new HttpRequestTask().execute();
@@ -282,8 +265,8 @@ public class RequestActivity extends BaseActivity implements AdapterView.OnItemS
 
                     startStations = new String[theStations.size()];
                     finishStations = new String[theStations.size()];
-                    startStationsIDs = new int[theStations.size()];
-                    finishStationsIDs = new int[theStations.size()];
+                    startStationsIDs = new Integer[theStations.size()];
+                    finishStationsIDs = new Integer[theStations.size()];
 
                     // Iterate list and populate arrays
 
@@ -331,6 +314,16 @@ public class RequestActivity extends BaseActivity implements AdapterView.OnItemS
         finishStationSpinner.setAdapter(adapterFinishStation);
         finishStationSpinner.setOnItemSelectedListener(this);
 
+        // selected stations ids from shared preferences
+
+        sharedpreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        startStationID = Integer.parseInt(sharedpreferences.getString("startStationID", "0"));
+        finishStationID = Integer.parseInt(sharedpreferences.getString("finishStationID", "0"));
+
+        // Set station spinners to values selected from Maps Activity
+
+        startStationSpinner.setSelection(Arrays.asList(startStationsIDs).indexOf(startStationID));
+        finishStationSpinner.setSelection(Arrays.asList(finishStationsIDs).indexOf(finishStationID));
     }
 
     // Change selected stations ids according to spinner value

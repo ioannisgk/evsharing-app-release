@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -53,6 +54,7 @@ import static com.ioannisgk.evsharingapp.R.string.offlineSettingsActivity;
 import static com.ioannisgk.evsharingapp.R.string.onlineSettingsActivity;
 
 public class MapActivity extends BaseActivity implements GoogleMap.OnMarkerClickListener, OnMapReadyCallback {
+    TextView infoMessage;
 
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
@@ -83,6 +85,9 @@ public class MapActivity extends BaseActivity implements GoogleMap.OnMarkerClick
         Menu navigationMenu = navigationView.getMenu();
         navigationMenu.findItem(R.id.nav_main).setVisible(false);
         navigationMenu.findItem(R.id.nav_register).setVisible(false);
+
+        // Get activity resources
+        infoMessage = (TextView) findViewById(R.id.infoTextView);
 
         // Execute async task to get station objects
         new HttpRequestTask().execute();
@@ -175,41 +180,59 @@ public class MapActivity extends BaseActivity implements GoogleMap.OnMarkerClick
     @Override
     public boolean onMarkerClick(Marker marker) {
 
-        // Retrieve status data from the marker
-        boolean selected = (boolean) marker.getTag();
+        // Show info window and set tag to true
 
+        marker.showInfoWindow();
         marker.setTag(true);
         totalCounter = totalCounter + 1;
 
+        // If both stations have been selected save destination station id to array
+
         if ((totalCounter % 2) == 0 ) {
 
-            int i = 0;
-            for (Marker currentMarker : mMarkerArray) {
+            // Iterate current stations and save its id to array
 
-                boolean currentStatus = (boolean) currentMarker.getTag();
-                if (currentStatus == true) {
-
-                    // If market tag is true then iterate current stations and save its id to array
-
-                    for (int j = 0; j < currentStations.size(); j++) {
-                        if (currentStations.get(j).getName().equals(currentMarker.getTitle())) {
-                            stationIDs[i] = currentStations.get(j).getId();
-                            i++;
-                        }
-                    }
+            for (int i = 0; i < currentStations.size(); i++) {
+                if (currentStations.get(i).getName().equals(marker.getTitle())) {
+                    stationIDs[1] = currentStations.get(i).getId();
                 }
             }
-            Settings.showToast(getApplicationContext(), "From station: " + marker.getTitle());
+
+            // If destination station is the same as start station, prompt user to select a different station
+
+            if (stationIDs[0] == stationIDs[1]) {
+
+                stationIDs[1] = -1;
+                totalCounter = totalCounter - 1;
+                Settings.showToast(getApplicationContext(), "Select a different station for destination");
+
+            } else {
+                infoMessage.setText("Destination: " + marker.getTitle());
+            }
 
         } else {
 
+            // If number of stations selected is not an even number, mark their tag with false value
+
+            stationIDs[0] = -1;
+            stationIDs[1] = -1;
+
             for (Marker currentMarker : mMarkerArray) {
+                marker.hideInfoWindow();
                 currentMarker.setTag(false);
             }
-            marker.setTag(true);
-            Settings.showToast(getApplicationContext(), "Destination: " + marker.getTitle());
-        }
 
+            // Iterate current stations and save its id to array
+
+            for (int i = 0; i < currentStations.size(); i++) {
+                if (currentStations.get(i).getName().equals(marker.getTitle())) {
+                    stationIDs[0] = currentStations.get(i).getId();
+                }
+            }
+            marker.showInfoWindow();
+            marker.setTag(true);
+            infoMessage.setText("From station: " + marker.getTitle());
+        }
         return true;
     }
 
@@ -359,9 +382,6 @@ public class MapActivity extends BaseActivity implements GoogleMap.OnMarkerClick
     public void onFabClicked(View view) {
 
         if ((stationIDs[0] >= 0) && (stationIDs[1] >= 0)) {
-
-            System.out.println("----IDs:" + stationIDs[0]);
-            System.out.println("----IDs:" + stationIDs[1]);
 
             // Set selected stations ids to preferences
 
