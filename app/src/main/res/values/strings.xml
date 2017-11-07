@@ -65,7 +65,7 @@
     <string name="historyDeniedActivity">User History</string>
 
     <string name="titleErrorActivity">Vehicle request</string>
-    <string name="nameErrorActivity">Server communication error try again later</string>
+    <string name="nameErrorActivity">Service is temporarily down try again later</string>
     <string name="infoErrorActivity">Main actions</string>
     <string name="backErrorActivity">Back to Profile</string>
     <string name="historyErrorActivity">User History</string>

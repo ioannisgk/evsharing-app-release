@@ -3,7 +3,6 @@ package com.ioannisgk.evsharingapp;
 import android.content.Intent;
 import android.support.design.widget.NavigationView;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,18 +11,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.ioannisgk.evsharingapp.HistoryActivity;
-import com.ioannisgk.evsharingapp.ProfileActivity;
-import com.ioannisgk.evsharingapp.R;
-import com.ioannisgk.evsharingapp.RequestActivity;
 import com.ioannisgk.evsharingapp.base.BaseActivity;
-import com.ioannisgk.evsharingapp.entities.User;
 
 import butterknife.ButterKnife;
 
 import static com.ioannisgk.evsharingapp.R.drawable.accepted_512;
-import static com.ioannisgk.evsharingapp.R.drawable.denied_512;
 import static com.ioannisgk.evsharingapp.R.drawable.error_512;
+import static com.ioannisgk.evsharingapp.R.drawable.denied_512;
 import static com.ioannisgk.evsharingapp.R.string.nameAcceptedActivity;
 import static com.ioannisgk.evsharingapp.R.string.nameDeniedActivity;
 import static com.ioannisgk.evsharingapp.R.string.nameErrorActivity;

@@ -86,7 +86,7 @@ public class RequestActivity extends BaseActivity implements AdapterView.OnItemS
 
                 try {
 
-                    sender = new Socket(Global.ipAddress, Global.portNumber);
+                    sender = new Socket(Global.ipAddress, 5566);
                     out = new PrintWriter(sender.getOutputStream(), true);
                     in = new BufferedReader(new InputStreamReader(sender.getInputStream()));
 

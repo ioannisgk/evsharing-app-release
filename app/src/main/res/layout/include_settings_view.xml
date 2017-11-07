@@ -131,6 +131,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/saveButton"
+        android:layout_marginTop="2dp"
         android:text="@string/backSettingsActivity" />
 
 </RelativeLayout>
