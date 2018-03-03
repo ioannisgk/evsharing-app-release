@@ -24,7 +24,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-public class Settings {
+public class Helpers {
 
     // Method to create the database that holds the user's data or open it if it exists
 
@@ -198,9 +198,9 @@ public class Settings {
             showDialogBox("Request error", "Start and destination stations can not be the same", context);
             return false;
 
-        } else if (theTime.isEmpty()) {
+        } else if (theTime.isEmpty() || (theTime.length() > 5)) {
 
-            showDialogBox("Request error", "Empty fields detected", context);
+            showDialogBox("Request error", "Empty or invalid time detected", context);
             return false;
 
         } else if (Integer.parseInt(theTime.substring(0,2)) < 6) {
@@ -222,15 +222,15 @@ public class Settings {
     public static boolean validateSettingsData(String ipAddress, String portNumber, Context context) {
 
         if (portNumber.isEmpty() || ipAddress.isEmpty()) {
-            showDialogBox("Settings error", "Empty fields detected", context);
+            showDialogBox("Helpers error", "Empty fields detected", context);
             return false;
 
         } else if (!portNumber.matches("-?\\d+(\\.\\d+)?")) {
-            showDialogBox("Settings error", "Invalid characters detected", context);
+            showDialogBox("Helpers error", "Invalid characters detected", context);
             return false;
 
         } else if (Integer.parseInt(portNumber) > 65535) {
-            showDialogBox("Settings error", "Port number is not valid", context);
+            showDialogBox("Helpers error", "Port number is not valid", context);
             return false;
 
         } else {
@@ -238,11 +238,11 @@ public class Settings {
                 Inet4Address address = (Inet4Address) Inet4Address.getByName(ipAddress);
             } catch (NetworkOnMainThreadException e) {
 
-                showDialogBox("Settings error", "IP address is not valid", context);
+                showDialogBox("Helpers error", "IP address is not valid", context);
                 return false;
 
             } catch (UnknownHostException e) {
-                showDialogBox("Settings error", "IP address is not valid", context);
+                showDialogBox("Helpers error", "IP address is not valid", context);
                 return false;
             }
         }

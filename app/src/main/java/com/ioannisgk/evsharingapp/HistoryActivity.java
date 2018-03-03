@@ -12,7 +12,7 @@ import android.widget.Button;
 
 import com.ioannisgk.evsharingapp.base.BaseActivity;
 import com.ioannisgk.evsharingapp.utils.Global;
-import com.ioannisgk.evsharingapp.utils.Settings;
+import com.ioannisgk.evsharingapp.utils.Helpers;
 
 import butterknife.ButterKnife;
 
@@ -43,7 +43,7 @@ public class HistoryActivity extends BaseActivity {
         webView = (WebView) findViewById(R.id.dataWebView);
 
         // Load information from database and show them to the webview
-        Settings.loadDB(Global.myDB, Global.databaseFile, webView);
+        Helpers.loadDB(Global.myDB, Global.databaseFile, webView);
 
         // Start ProfileActivity when clicking on back to profile
 
@@ -62,9 +62,9 @@ public class HistoryActivity extends BaseActivity {
 
                 // Delete data from database and reload webview
 
-                Settings.deleteDB(Global.myDB, Global.databaseFile);
+                Helpers.deleteDB(Global.myDB, Global.databaseFile);
                 webView.loadData ("User history is empty", "text/html", "UTF-8");
-                Settings.showToast(getApplicationContext(), "User history is deleted");
+                Helpers.showToast(getApplicationContext(), "User history is deleted");
             }
         });
     }

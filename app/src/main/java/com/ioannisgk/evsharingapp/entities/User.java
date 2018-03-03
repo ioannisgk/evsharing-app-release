@@ -14,6 +14,7 @@ public class User implements Serializable {
     private String gender;
     private Date dob;
     private String requestStatus;
+    private boolean used;
 
     // Class constructors
     public User() {
@@ -42,6 +43,14 @@ public class User implements Serializable {
     }
 
     // Getters and setters
+
+    public void setUsed(boolean used) {
+        this.used = used;
+    }
+
+    public boolean isUsed() {
+        return used;
+    }
 
     public int getId() {
         return id;

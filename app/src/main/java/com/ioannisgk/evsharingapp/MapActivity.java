@@ -10,17 +10,14 @@ import android.os.AsyncTask;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -38,20 +35,14 @@ import com.google.android.gms.tasks.Task;
 import com.ioannisgk.evsharingapp.base.BaseActivity;
 import com.ioannisgk.evsharingapp.entities.Station;
 import com.ioannisgk.evsharingapp.utils.AuthTokenInfo;
-import com.ioannisgk.evsharingapp.utils.Settings;
+import com.ioannisgk.evsharingapp.utils.Helpers;
 import com.ioannisgk.evsharingapp.utils.SpringRestClient;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
-import static com.ioannisgk.evsharingapp.R.drawable.ic_offline_24dp;
-import static com.ioannisgk.evsharingapp.R.drawable.ic_online_24dp;
-import static com.ioannisgk.evsharingapp.R.string.offlineSettingsActivity;
-import static com.ioannisgk.evsharingapp.R.string.onlineSettingsActivity;
 
 public class MapActivity extends BaseActivity implements GoogleMap.OnMarkerClickListener, OnMapReadyCallback {
     TextView infoMessage;
@@ -99,7 +90,7 @@ public class MapActivity extends BaseActivity implements GoogleMap.OnMarkerClick
     @Override
     public void onMapReady(final GoogleMap googleMap) {
 
-        Settings.showToast(getApplicationContext(), "Map is ready");
+        Helpers.showToast(getApplicationContext(), "Map is ready");
         mMap = googleMap;
 
         // Wait 1.5 seconds to allow connection and then create and show markers on map
@@ -159,10 +150,10 @@ public class MapActivity extends BaseActivity implements GoogleMap.OnMarkerClick
                             mMap.animateCamera(cu);
 
                         } else {
-                            Settings.showDialogBox("Stations error", "Could not find stations in the database", MapActivity.this);
+                            Helpers.showDialogBox("Stations error", "Could not find stations in the database", MapActivity.this);
                         }
                     } else {
-                        Settings.showDialogBox("Stations error", "Could not find stations in the database", MapActivity.this);
+                        Helpers.showDialogBox("Stations error", "Could not find stations in the database", MapActivity.this);
                     }
                 }
             }
@@ -204,7 +195,7 @@ public class MapActivity extends BaseActivity implements GoogleMap.OnMarkerClick
 
                 stationIDs[1] = -1;
                 totalCounter = totalCounter - 1;
-                Settings.showToast(getApplicationContext(), "Select a different station for destination");
+                Helpers.showToast(getApplicationContext(), "Select a different station for destination");
 
             } else {
                 infoMessage.setText("Destination: " + marker.getTitle());
@@ -274,11 +265,11 @@ public class MapActivity extends BaseActivity implements GoogleMap.OnMarkerClick
                     currentStations = new ArrayList<Station>(theStations);
 
                 } else if (theStations.size() == 0) {
-                    Settings.showDialogBox("Stations error", "Could not find stations in the database", MapActivity.this);
+                    Helpers.showDialogBox("Stations error", "Could not find stations in the database", MapActivity.this);
                 }
 
             } else {
-                Settings.showDialogBox("Server error", "Could not connect to server", MapActivity.this);
+                Helpers.showDialogBox("Server error", "Could not connect to server", MapActivity.this);
             }
         }
     }
@@ -309,13 +300,13 @@ public class MapActivity extends BaseActivity implements GoogleMap.OnMarkerClick
                             }
 
                         } else {
-                            Settings.showToast(getApplicationContext(), "Could not get current location");
+                            Helpers.showToast(getApplicationContext(), "Could not get current location");
                         }
                     }
                 });
             }
         } catch (SecurityException e) {
-            Settings.showToast(getApplicationContext(), "Could not get current location");
+            Helpers.showToast(getApplicationContext(), "Could not get current location");
         }
     }
 

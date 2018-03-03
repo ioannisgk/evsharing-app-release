@@ -1,5 +1,9 @@
 Developer name: Ioannis Gkourtzounis
 
-This application is part of the Dissertation Project.
+This mobile application is part of the Dissertation Project for the Bsc Degree in Computing (University of Northampton).
 
-Thank you for using this app.
+A user can register an account, login and request a vehicle for a short trip from a car sharing service that utilizes Electric Vehicles.
+
+EV Sharing App was developed and submitted to Google Store for educational and testing purposes, so it is not used by a company in real time.
+
+For more information, please visit http://ioannisgk.com

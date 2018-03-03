@@ -20,7 +20,7 @@ import com.ioannisgk.evsharingapp.base.BaseActivity;
 import com.ioannisgk.evsharingapp.entities.User;
 import com.ioannisgk.evsharingapp.utils.AuthTokenInfo;
 import com.ioannisgk.evsharingapp.utils.DateDialog;
-import com.ioannisgk.evsharingapp.utils.Settings;
+import com.ioannisgk.evsharingapp.utils.Helpers;
 import com.ioannisgk.evsharingapp.utils.SpringRestClient;
 import com.ioannisgk.evsharingapp.utils.MyTextEncryptor;
 
@@ -83,7 +83,7 @@ public class RegisterActivity extends BaseActivity implements AdapterView.OnItem
                 final String password = regPassword.getText().toString();
 
                 // Validate input data from the registration form
-                boolean dataIsValid = Settings.validateRegisterData(name, username, password, date, RegisterActivity.this);
+                boolean dataIsValid = Helpers.validateRegisterData(name, username, password, date, RegisterActivity.this);
 
                 if (dataIsValid == true) {
 
@@ -148,7 +148,7 @@ public class RegisterActivity extends BaseActivity implements AdapterView.OnItem
             if (registered != null) {
                 if (registered == true) {
 
-                    Settings.showDialogBoxSuccess("Success", "Registration was successful", RegisterActivity.this);
+                    Helpers.showDialogBoxSuccess("Success", "Registration was successful", RegisterActivity.this);
 
                     // Start MainActivity for the user to login
 
@@ -156,11 +156,11 @@ public class RegisterActivity extends BaseActivity implements AdapterView.OnItem
                     RegisterActivity.this.startActivity(intent);
 
                 } else if (registered == false) {
-                    Settings.showDialogBox("Register error", "Could not complete registration (email already registered?)", RegisterActivity.this);
+                    Helpers.showDialogBox("Register error", "Could not complete registration (email already registered?)", RegisterActivity.this);
                 }
 
             } else {
-                Settings.showDialogBox("Server error", "Could not connect to server", RegisterActivity.this);
+                Helpers.showDialogBox("Server error", "Could not connect to server", RegisterActivity.this);
             }
         }
     }

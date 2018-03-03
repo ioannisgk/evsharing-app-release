@@ -4,15 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.icu.text.SimpleDateFormat;
 import android.os.CountDownTimer;
 import android.support.design.widget.NavigationView;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -20,32 +17,21 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ioannisgk.evsharingapp.base.BaseActivity;
-import com.ioannisgk.evsharingapp.entities.User;
 import com.ioannisgk.evsharingapp.utils.Global;
-import com.ioannisgk.evsharingapp.utils.Settings;
+import com.ioannisgk.evsharingapp.utils.Helpers;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.ConnectException;
 import java.net.Socket;
-import java.net.UnknownHostException;
-import java.text.ParseException;
-import java.util.Date;
 
 import butterknife.ButterKnife;
 
-import static com.ioannisgk.evsharingapp.R.drawable.accepted_512;
 import static com.ioannisgk.evsharingapp.R.drawable.ic_offline_24dp;
 import static com.ioannisgk.evsharingapp.R.drawable.ic_online_24dp;
-import static com.ioannisgk.evsharingapp.R.string.nameAcceptedActivity;
 import static com.ioannisgk.evsharingapp.R.string.offlineSettingsActivity;
 import static com.ioannisgk.evsharingapp.R.string.onlineSettingsActivity;
 
@@ -224,7 +210,7 @@ public class SettingsActivity extends BaseActivity {
                 final String myPortNumber = portnumberSetting.getText().toString();
 
                 // Validate input data from editing the profile
-                boolean dataIsValid = Settings.validateSettingsData(myIpAddress, myPortNumber, SettingsActivity.this);
+                boolean dataIsValid = Helpers.validateSettingsData(myIpAddress, myPortNumber, SettingsActivity.this);
 
                 if (dataIsValid == true) {
 
@@ -249,7 +235,7 @@ public class SettingsActivity extends BaseActivity {
                     Global.ipAddress = sharedpreferences.getString("ipAddress", "178.62.121.237");
                     Global.portNumber = Integer.parseInt(sharedpreferences.getString("portNumber", "8080"));
 
-                    Settings.showToast(getApplicationContext(), "Settings updated successfully");
+                    Helpers.showToast(getApplicationContext(), "Helpers updated successfully");
                 }
             }
         });

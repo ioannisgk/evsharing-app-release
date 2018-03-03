@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.icu.text.SimpleDateFormat;
 import android.os.AsyncTask;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.view.Menu;
@@ -26,7 +25,7 @@ import com.ioannisgk.evsharingapp.entities.User;
 import com.ioannisgk.evsharingapp.utils.AuthTokenInfo;
 import com.ioannisgk.evsharingapp.utils.DateDialog;
 import com.ioannisgk.evsharingapp.utils.Global;
-import com.ioannisgk.evsharingapp.utils.Settings;
+import com.ioannisgk.evsharingapp.utils.Helpers;
 import com.ioannisgk.evsharingapp.utils.SpringRestClient;
 
 import java.text.ParseException;
@@ -125,7 +124,7 @@ public class ProfileActivity extends BaseActivity implements AdapterView.OnItemS
                 final String date = profileDate.getText().toString();
 
                 // Validate input data from editing the profile
-                boolean dataIsValid = Settings.validateProfileData(name, date, ProfileActivity.this);
+                boolean dataIsValid = Helpers.validateProfileData(name, date, ProfileActivity.this);
 
                 if (dataIsValid == true) {
 
@@ -212,15 +211,15 @@ public class ProfileActivity extends BaseActivity implements AdapterView.OnItemS
             if (registered != null) {
                 if (registered == true) {
 
-                    Settings.showToast(getApplicationContext(), "Profile updated successfully");
+                    Helpers.showToast(getApplicationContext(), "Profile updated successfully");
                     alterProfileControls(false);
 
                 } else if (registered == false) {
-                    Settings.showDialogBox("Profile error", "Could not find user in the database", ProfileActivity.this);
+                    Helpers.showDialogBox("Profile error", "Could not find user in the database", ProfileActivity.this);
                 }
 
             } else {
-                Settings.showDialogBox("Server error", "Could not connect to server", ProfileActivity.this);
+                Helpers.showDialogBox("Server error", "Could not connect to server", ProfileActivity.this);
             }
         }
     }

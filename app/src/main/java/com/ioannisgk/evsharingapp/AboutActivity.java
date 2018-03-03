@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import com.ioannisgk.evsharingapp.base.BaseActivity;
-import com.ioannisgk.evsharingapp.utils.Settings;
+import com.ioannisgk.evsharingapp.utils.Helpers;
 
 import butterknife.ButterKnife;
 
@@ -42,7 +42,7 @@ public class AboutActivity extends BaseActivity {
 
         } catch (IOException e) {
 
-            Settings.showDialogBox("Memory error", "Application data could not be read", AboutActivity.this);
+            Helpers.showDialogBox("Memory error", "Application data could not be read", AboutActivity.this);
             e.printStackTrace();
         }
 

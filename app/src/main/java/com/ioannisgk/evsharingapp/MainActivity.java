@@ -17,14 +17,11 @@ import com.ioannisgk.evsharingapp.base.BaseActivity;
 import com.ioannisgk.evsharingapp.entities.User;
 import com.ioannisgk.evsharingapp.utils.AuthTokenInfo;
 import com.ioannisgk.evsharingapp.utils.Global;
+import com.ioannisgk.evsharingapp.utils.Helpers;
 import com.ioannisgk.evsharingapp.utils.MyTextEncryptor;
-import com.ioannisgk.evsharingapp.utils.Settings;
 import com.ioannisgk.evsharingapp.utils.SpringRestClient;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 
 import butterknife.ButterKnife;
 
@@ -68,7 +65,7 @@ public class MainActivity extends BaseActivity {
 
         File myFile = getFilesDir();
         Global.databaseFile = myFile;
-        Global.myDB = Settings.createDB(Global.myDB, Global.databaseFile);
+        Global.myDB = Helpers.createDB(Global.myDB, Global.databaseFile);
 
         // Start RegisterActivity when clicking on Register
 
@@ -99,7 +96,7 @@ public class MainActivity extends BaseActivity {
                     new HttpRequestTask().execute(username, encryptedPassword);
 
                 } else {
-                    Settings.showDialogBox("Login error", "Empty fields detected", MainActivity.this);
+                    Helpers.showDialogBox("Login error", "Empty fields detected", MainActivity.this);
                 }
             }
         });
@@ -163,11 +160,11 @@ public class MainActivity extends BaseActivity {
                     finish();
 
                 } else if (theUser.getRequestStatus().equals("Invalid login details")) {
-                    Settings.showDialogBox("Login error", "Invalid login details", MainActivity.this);
+                    Helpers.showDialogBox("Login error", "Invalid login details", MainActivity.this);
                 }
 
             } else {
-                Settings.showDialogBox("Server error", "Could not connect to server", MainActivity.this);
+                Helpers.showDialogBox("Server error", "Could not connect to server", MainActivity.this);
             }
         }
     }

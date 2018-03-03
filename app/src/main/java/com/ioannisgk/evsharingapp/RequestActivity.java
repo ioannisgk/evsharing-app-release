@@ -22,8 +22,8 @@ import com.ioannisgk.evsharingapp.base.BaseActivity;
 import com.ioannisgk.evsharingapp.entities.Station;
 import com.ioannisgk.evsharingapp.utils.AuthTokenInfo;
 import com.ioannisgk.evsharingapp.utils.Global;
+import com.ioannisgk.evsharingapp.utils.Helpers;
 import com.ioannisgk.evsharingapp.utils.MyTextEncryptor;
-import com.ioannisgk.evsharingapp.utils.Settings;
 import com.ioannisgk.evsharingapp.utils.SpringRestClient;
 import com.ioannisgk.evsharingapp.utils.TimeDialog;
 
@@ -87,6 +87,10 @@ public class RequestActivity extends BaseActivity implements AdapterView.OnItemS
                 try {
 
                     sender = new Socket(Global.ipAddress, 5566);
+
+                    // Enable for localhost connection only
+                    // sender = new Socket("10.0.2.2", 5566);
+
                     out = new PrintWriter(sender.getOutputStream(), true);
                     in = new BufferedReader(new InputStreamReader(sender.getInputStream()));
 
@@ -103,7 +107,7 @@ public class RequestActivity extends BaseActivity implements AdapterView.OnItemS
                             }
 
                             String currentDate = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
-                            Settings.updateDB(Global.myDB, Global.databaseFile, currentDate, requestTime.getText().toString(),
+                            Helpers.updateDB(Global.myDB, Global.databaseFile, currentDate, requestTime.getText().toString(),
                                     selectedStartStationName, selectedFinishStationName, incomingMessage);
 
                             out.println("bye");
@@ -147,6 +151,12 @@ public class RequestActivity extends BaseActivity implements AdapterView.OnItemS
         // Display current username
         profileName.setText(Global.currentUser.getUsername());
 
+        // Make profile field inactive and not editable
+
+        profileName.setClickable(false);
+        profileName.setFocusable(false);
+        profileName.setFocusableInTouchMode(false);
+
         // Execute async task to get station objects
         new HttpRequestTask().execute();
 
@@ -173,7 +183,7 @@ public class RequestActivity extends BaseActivity implements AdapterView.OnItemS
                 final String time = requestTime.getText().toString();
 
                 // Validate input data from editing the profile
-                boolean dataIsValid = Settings.validateRequestData(selectedStartStationID, selectedFinishStationID, time, RequestActivity.this);
+                boolean dataIsValid = Helpers.validateRequestData(selectedStartStationID, selectedFinishStationID, time, RequestActivity.this);
 
                 if (dataIsValid == true) {
 
@@ -201,7 +211,7 @@ public class RequestActivity extends BaseActivity implements AdapterView.OnItemS
                         String currentDate = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
                         String currentTime = new SimpleDateFormat("hh:mm").format(new Date());
 
-                        Settings.updateDB(Global.myDB, Global.databaseFile, currentDate, requestTime.getText().toString(),
+                        Helpers.updateDB(Global.myDB, Global.databaseFile, currentDate, requestTime.getText().toString(),
                                 selectedStartStationName, selectedFinishStationName, incomingMessage);
 
                         Intent intent = new Intent(RequestActivity.this, ResponseActivity.class);
@@ -287,11 +297,11 @@ public class RequestActivity extends BaseActivity implements AdapterView.OnItemS
                     populateSpinners();
 
                 } else if (theStations.size() == 0) {
-                    Settings.showDialogBox("Stations error", "Could not find stations in the database", RequestActivity.this);
+                    Helpers.showDialogBox("Stations error", "Could not find stations in the database", RequestActivity.this);
                 }
 
             } else {
-                Settings.showDialogBox("Server error", "Could not connect to server", RequestActivity.this);
+                Helpers.showDialogBox("Server error", "Could not connect to server", RequestActivity.this);
             }
         }
     }
