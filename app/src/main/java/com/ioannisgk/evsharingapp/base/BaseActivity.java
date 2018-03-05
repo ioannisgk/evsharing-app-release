@@ -87,7 +87,11 @@ public abstract class BaseActivity extends AppCompatActivity {
     private void goToNavDrawerItem(int item) {
         switch (item) {
             case R.id.nav_main:
-                startActivity(new Intent(this, MainActivity.class));
+                Intent myIntent1 = new Intent(new Intent(this, MainActivity.class));
+                myIntent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                myIntent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                myIntent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(myIntent1);
                 finish();
                 break;
             case R.id.nav_register:
@@ -110,7 +114,11 @@ public abstract class BaseActivity extends AppCompatActivity {
                 break;
             case R.id.nav_logout:
                 Global.currentUser = null;
-                startActivity(new Intent(this, MainActivity.class));
+                Intent myIntent2 = new Intent(new Intent(this, MainActivity.class));
+                myIntent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                myIntent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                myIntent2.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(myIntent2);
                 finish();
                 break;
             case R.id.nav_settings:
